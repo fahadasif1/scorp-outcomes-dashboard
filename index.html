@@ -674,8 +674,10 @@ function axisY(svg, y, m, w) {
 /* ---------------- period + filter bar ---------------- */
 function presets() {
   const jan = Math.floor(MN / 12) * 12;
+  // previous calendar month, from today's date (not the newest data), clamped to the months in the sheet
+  const now = new Date(), lm = Math.min(MN, Math.max(0, (now.getFullYear() - Y0) * 12 + now.getMonth() - 1));
   return [["All time", [0, MN]], ["This year", [jan, MN]], ["Last year", [Math.max(0, jan - 12), Math.max(0, jan - 1)]],
-    ["Last 12 months", [Math.max(0, MN - 11), MN]], ["Last 3 months", [Math.max(0, MN - 2), MN]]];
+    ["Last 12 months", [Math.max(0, MN - 11), MN]], ["Last 3 months", [Math.max(0, MN - 2), MN]], ["Last month", [lm, lm]]];
 }
 function periodUI() {
   const p = $("#presets"); p.innerHTML = "";
