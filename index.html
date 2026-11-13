@@ -395,11 +395,13 @@ window.SCORP_RULES = {"brand":{"Student4uk":"Students4uk","Edmine":"EdMine","Wor
   const REGIONS = ["Pakistan", "UK offices", "India", "Gulf", "Other"];
   const MATCH_WINDOW = 400; // max days from deposit to visa for the two to count as one student journey
   const DUP_WINDOW = 14;    // a second deposit for the same student and brand within this many days is a likely duplicate
+  const DUP_VISA_WINDOW = 30; // a second visa for the same student and brand within this many days is a likely duplicate
   const DAY = 864e5;
 
-  // cube row: [month, brand, city, university, kind (0 deposit, 1 visa), segment, destination, intake, office, matched, count]
+  // cube row: [month, brand, city, university, kind (0 deposit, 1 visa), segment, destination, intake, office, matched, late, count]
   // matched = deposit later got a visa / visa has an earlier deposit
-  const C = { m: 0, b: 1, c: 2, i: 3, k: 4, s: 5, d: 6, t: 7, p: 8, x: 9, n: 10 };
+  // late = the row falls later in its month than the newest record's day of month (so a part month can be compared with the same days a year earlier)
+  const C = { m: 0, b: 1, c: 2, i: 3, k: 4, s: 5, d: 6, t: 7, p: 8, x: 9, l: 10, n: 11 };
   // lag row: [visa month, brand, city, days, university, destination, intake, team, office]
   const L = { m: 0, b: 1, c: 2, days: 3, i: 4, d: 5, t: 6, s: 7, p: 8 };
 
@@ -481,6 +483,12 @@ window.SCORP_RULES = {"brand":{"Student4uk":"Students4uk","Edmine":"EdMine","Wor
     for (const r of all) r.$m = (r.$y - y0) * 12 + r.$mon - 1;
     const end = new Date(last || Date.now());
     const mn = (end.getUTCFullYear() - y0) * 12 + end.getUTCMonth();
+    // how much of the newest month the sheet covers (13 Nov -> 13/30); rows after that day are "late"
+    const monthDays = new Date(Date.UTC(end.getUTCFullYear(), end.getUTCMonth() + 1, 0)).getUTCDate();
+    const cutDay = end.getUTCDate() === monthDays ? 31 : end.getUTCDate();
+    const lastFrac = end.getUTCDate() / monthDays;
+    const firstM = all.reduce((a, r) => Math.min(a, r.$m), all.length ? Infinity : 0);
+    const lateOf = r => +r["submission date"].slice(8, 10) > cutDay ? 1 : 0;
 
     const rank = f => { const m = new Map(); for (const r of all) bump(m, f(r)); return [...m].sort((a, b) => b[1] - a[1]).map(x => x[0]); };
     const brands = rank(brandOf), cities = rank(cityOf), insts = rank(instOf), dests = rank(destOf), offices = rank(officeOf);
@@ -506,16 +514,19 @@ window.SCORP_RULES = {"brand":{"Student4uk":"Students4uk","Edmine":"EdMine","Wor
       const k = key(r), vs = k ? visaDays.get(k) : null;
       const converted = !!vs && vs.some(v => v >= r.$day && v - r.$day <= MATCH_WINDOW * DAY);
       if (k) { const same = depsByKey.get(k); const j = same.indexOf(r); if (j > 0 && r.$day - same[j - 1].$day <= DUP_WINDOW * DAY) dupDeposits++; }
-      add([r.$m, bi.get(brandOf(r)), ci.get(cityOf(r)), ii.get(instOf(r)), 0, segOf(0, r), di.get(destOf(r)), ti.get(intakeKey(r.$y, r.$mon)), pi.get(officeOf(r)), converted ? 1 : 0]);
+      add([r.$m, bi.get(brandOf(r)), ci.get(cityOf(r)), ii.get(instOf(r)), 0, segOf(0, r), di.get(destOf(r)), ti.get(intakeKey(r.$y, r.$mon)), pi.get(officeOf(r)), converted ? 1 : 0, lateOf(r)]);
     }
-    let unmatchedVisas = 0;
+    let unmatchedVisas = 0, dupVisas = 0;
+    const visasByKey = new Map();
+    for (const r of visa) { const k = key(r); if (k) (visasByKey.get(k) || visasByKey.set(k, []).get(k)).push(r.$day); }
+    visasByKey.forEach(a => { a.sort((x, y) => x - y); for (let j = 1; j < a.length; j++) if (a[j] - a[j - 1] <= DUP_VISA_WINDOW * DAY) dupVisas++; });
     for (const r of visa) {
       const k = key(r), ds = k ? depsByKey.get(k) : null;
       const first = ds ? ds.find(d => d.$day <= r.$day && r.$day - d.$day <= MATCH_WINDOW * DAY) : null;
       const b = bi.get(brandOf(r)), c = ci.get(cityOf(r)), i = ii.get(instOf(r)), d = di.get(destOf(r)), s = segOf(1, r), p = pi.get(officeOf(r));
       const t = first ? ti.get(intakeKey(first.$y, first.$mon)) : noMatch;
       if (!first) unmatchedVisas++;
-      add([r.$m, b, c, i, 1, s, d, t, p, first ? 1 : 0]);
+      add([r.$m, b, c, i, 1, s, d, t, p, first ? 1 : 0, lateOf(r)]);
       if (first) lag.push([r.$m, b, c, Math.round((r.$day - first.$day) / DAY), i, d, t, s, p]);
     }
 
@@ -541,14 +552,14 @@ window.SCORP_RULES = {"brand":{"Student4uk":"Students4uk","Edmine":"EdMine","Wor
       badDates: { visa: visaTab.bad, deposit: depTab.bad },
       instMissing: { visa: instMissingV, deposit: instMissingD },
       officeMissing: { visa: officeMissingV, deposit: officeMissingD },
-      cityUnknown, destUnknown, unmatchedVisas, dupDeposits,
+      cityUnknown, destUnknown, unmatchedVisas, dupDeposits, dupVisas,
       unmappedInst: topCounts(rawInst, 15),
       unmappedCity: topCounts(rawCity, 15),
       mergedBrands: topCounts(merged, 15),
     };
 
     return {
-      asOf: end.toISOString().slice(0, 10), y0, mn,
+      asOf: end.toISOString().slice(0, 10), y0, mn, firstM, lastFrac,
       brands, cities, insts, dests, intakes, offices,
       cityRegion: cities.map(regionOf), geo: R.geo, segs: R.segs,
       cube: [...cube].map(([k, v]) => [...k.split(",").map(Number), v]),
@@ -637,6 +648,11 @@ const col = c => r => r[c];
 function conv(depRows) { let n = 0, x = 0; for (const r of depRows) if (r[C.m] <= MN - MATURE) { n += r[C.n]; x += r[C.x] * r[C.n]; } return n ? x / n : null; }
 const isOpen = r => !r[C.x] && r[C.m] > MN - OPEN;
 const yoyRange = () => state.r[0] - 12 >= 0 ? [state.r[0] - 12, state.r[1] - 12] : null;
+// last year's rows for a comparison: when the period ends with the part-filled newest month,
+// the same month last year is cut to the same days (1-13 Nov 2026 is compared with 1-13 Nov 2025)
+const yoySel = (kind, skip, yr) => { const out = sel(kind, skip, yr); return state.r[1] === MN ? out.filter(r => !(r[C.m] === MN - 12 && r[C.l])) : out; };
+// months a period really covers: none before the sheet's first record, and the newest month only as far as the data goes
+const monthsIn = ([a, b]) => { const s = Math.max(a, D.firstM); return s > b ? 0 : b - s + 1 - (b === MN ? 1 - D.lastFrac : 0); };
 const median = a => a.length ? d3.median(a) : null;
 
 /* ---------------- helpers ---------------- */
@@ -771,7 +787,7 @@ function chips() {
 
 /* ---------------- KPIs + insights ---------------- */
 function kpis() {
-  const v = sel(1), d = sel(0), vt = sum(v), dt = sum(d), len = state.r[1] - state.r[0] + 1, yr = yoyRange();
+  const v = sel(1), d = sel(0), vt = sum(v), dt = sum(d), len = monthsIn(state.r), yr = yoyRange();
   const LY = "vs same period last year";
   setNum("k-visa", vt); setNum("k-dep", dt);
   const cv = conv(d);
@@ -779,11 +795,11 @@ function kpis() {
   setNum("k-lag", median(lagRows().map(l => l[L.days])));
   const open = sel(0, null, "all").filter(isOpen), on3 = open.filter(r => r[C.m] <= MN - 3);
   setNum("k-open", sum(open));
-  setNum("k-rate", vt / len);
+  setNum("k-rate", len ? vt / len : null);
   if (yr && !full()) {
-    $("#k-visa-s").innerHTML = delta(vt, sum(sel(1, null, yr)), LY) || "no visas last year";
-    $("#k-dep-s").innerHTML = delta(dt, sum(sel(0, null, yr)), LY) || "no deposits last year";
-    const cp = conv(sel(0, null, yr));
+    $("#k-visa-s").innerHTML = delta(vt, sum(yoySel(1, null, yr)), LY) || "no visas last year";
+    $("#k-dep-s").innerHTML = delta(dt, sum(yoySel(0, null, yr)), LY) || "no deposits last year";
+    const cp = conv(yoySel(0, null, yr));
     $("#k-conv-s").innerHTML = cv != null && cp != null ? delta(cv, cp, LY, true) : "deposits at least 6 months old";
   } else {
     $("#k-visa-s").textContent = "pick a period to compare with last year";
@@ -822,7 +838,7 @@ function sparks(v, d) {
   spark("#sp-conv", conv, "var(--teal)", n => pct(n) + " converted", [0, 1]);
   const lg = new Map(); for (const l of lagRows(null, [a, b])) (lg.get(l[L.m]) || lg.set(l[L.m], []).get(l[L.m])).push(l[L.days]);
   spark("#sp-lag", ms.filter(m => (lg.get(m) || []).length >= 5).map(m => [m, d3.median(lg.get(m))]), "var(--rose)", n => Math.round(n) + " days median");
-  spark("#sp-rate", visPts.map((p, i) => [p[0], d3.mean(visPts.slice(Math.max(0, i - 2), i + 1), q => q[1])]), "var(--gold)", n => fmt(Math.round(n)) + " a month (3-month average)");
+  spark("#sp-rate", visPts.map((p, i) => { const w = visPts.slice(Math.max(0, i - 2), i + 1), n = monthsIn([w[0][0], p[0]]); return [p[0], n ? d3.sum(w, q => q[1]) / n : 0]; }), "var(--gold)", n => fmt(Math.round(n)) + " a month (3-month average)");
   const om = by(sel(0, null, "all").filter(isOpen), col(C.m));
   sparkBars("#sp-open", d3.range(MN - OPEN + 1, MN + 1).map(m => [m, om.get(m) || 0]), m => MN - m >= 3 ? "var(--rose)" : "var(--teal)", n => fmt(n) + " deposits still open");
 }
@@ -992,10 +1008,11 @@ function heatChart() {
       if (cw > 34 && n) g.append("text").attr("x", l + mo * cw + cw / 2).attr("y", 26 + y * 42 + 24).attr("text-anchor", "middle").style("font-family", "var(--mono)").style("font-size", cw > 44 ? "10.5px" : "9.5px").style("fill", n / mx > .45 ? "#1a1005" : "var(--ink2)").text(n);
     }
   }
-  // the average calendar month, counted only from the first month with data
+  // the average calendar month, counted only from the first month with data; the newest month is left out while it is only part-filled
   const first = d3.min([...mm].filter(x => x[1] > 0), x => x[0]);
   if (first == null) return;
-  const avg = MONTHS.map((_, mo) => { const v = d3.range(first, MN + 1).filter(i => i % 12 === mo).map(i => mm.get(i) || 0); return v.length ? d3.mean(v) : 0; });
+  const lastFull = D.lastFrac < 1 ? MN - 1 : MN;
+  const avg = MONTHS.map((_, mo) => { const v = d3.range(first, lastFull + 1).filter(i => i % 12 === mo).map(i => mm.get(i) || 0); return v.length ? d3.mean(v) : 0; });
   const peak = d3.max(avg) || 1, ya = d3.scaleLinear([0, peak], [0, 62]), best = avg.indexOf(peak);
   svg.append("text").attr("y", avgTop + 66).style("font-family", "var(--mono)").style("font-size", "11px").style("fill", "var(--ink3)").text("Avg");
   svg.append("line").attr("x1", l).attr("x2", w).attr("y1", avgTop + 70.5).attr("y2", avgTop + 70.5).style("stroke", "var(--line)");
@@ -1014,7 +1031,7 @@ function leagueData() {
   for (const r of sel(0, d.key)) { const o = get(d.get(r)); o.dep += r[C.n]; if (r[C.m] <= MN - MATURE) { o.mN += r[C.n]; o.mX += r[C.x] * r[C.n]; } }
   for (const r of sel(1, d.key)) get(d.get(r)).vis += r[C.n];
   for (const r of sel(0, d.key, "all")) if (isOpen(r)) get(d.get(r)).open += r[C.n];
-  if (yr) for (const r of sel(1, d.key, yr)) get(d.get(r)).prev += r[C.n];
+  if (yr) for (const r of yoySel(1, d.key, yr)) get(d.get(r)).prev += r[C.n];
   for (const l of lagRows(d.key)) get(d.lg(l)).lags.push(l[L.days]);
   return [...g.values()].filter(o => (o.dep || o.vis || o.open) && d.name(o.id) && d.name(o.id) !== d.hide).map(o => ({
     ...o, name: d.name(o.id), conv: o.mN >= 10 ? o.mX / o.mN : null, med: median(o.lags),
@@ -1167,6 +1184,7 @@ function quality() {
     card("Rows read", fmt(all), `${fmt(V)} visas, ${fmt(Dp)} deposits. ${fmt(q.badDates.visa + q.badDates.deposit)} skipped for a missing or unreadable date.`, q.badDates.visa + q.badDates.deposit > 0),
     card("Visas with no matching deposit", p(q.unmatchedVisas, V), `${fmt(q.unmatchedVisas)} visas. Usually a name spelt differently, or a different brand on the deposit.`, q.unmatchedVisas / V > .05),
     card("Possible duplicate deposits", fmt(q.dupDeposits), "Same student and brand within 14 days. Check before counting deposits.", q.dupDeposits > 0),
+    card("Possible duplicate visas", fmt(q.dupVisas), "Same student and brand within 30 days. Each one adds a visa to the totals.", q.dupVisas > 0),
     card("Deposits with no university", p(q.instMissing.deposit, Dp), `${fmt(q.instMissing.deposit)} deposits, ${fmt(q.instMissing.visa)} visas. University charts lean on visas for this reason.`, q.instMissing.deposit / Dp > .05),
     card("No partner office recorded", p(q.officeMissing.visa, V) + " of visas", `${fmt(q.officeMissing.visa)} visas, ${fmt(q.officeMissing.deposit)} deposits. The partner office view only covers the rest.`, q.officeMissing.visa / V > .05),
     card("Unknown origin city", fmt(q.cityUnknown), "Rows with a blank Location.", q.cityUnknown / all > .01),
