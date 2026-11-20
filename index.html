@@ -89,7 +89,7 @@ button.busy{pointer-events:none;opacity:.7}
 .views h1{font-size:clamp(28px,4vw,46px);margin:8px 0 6px}
 .views .sub{max-width:620px;margin:0 auto;color:var(--ink2)}
 .vgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin:28px auto 0;max-width:1100px}
-.vcard{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;padding:22px 22px 18px;min-height:180px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(180deg,var(--panel2),var(--panel));color:var(--ink);position:relative;overflow:hidden}
+.vcard{display:flex;flex-direction:column;align-items:flex-start;gap:8px;text-align:left;padding:20px 22px;min-height:150px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(180deg,var(--panel2),var(--panel));color:var(--ink);position:relative;overflow:hidden}
 .vcard::after{content:"";position:absolute;left:0;top:0;height:2px;width:100%;background:linear-gradient(90deg,var(--c,var(--gold)),transparent)}
 .vcard:hover{border-color:var(--line2);transform:translateY(-2px)}
 .vcard .n{font-size:20px;font-weight:700;letter-spacing:-.01em}
@@ -167,25 +167,14 @@ input[type=month]:focus{border-color:var(--gold)}
 }
 
 /* KPIs + insights */
-.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px}
+.kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:12px}
 .kpi{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:16px;padding:16px 18px;position:relative;overflow:hidden}
 .kpi::after{content:"";position:absolute;left:0;top:0;height:2px;width:100%;background:linear-gradient(90deg,var(--c,var(--ink3)),transparent)}
 .kpi .l{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3)}
 .kpi .v{font-size:clamp(26px,2.8vw,40px);font-weight:800;letter-spacing:-.02em;margin-top:6px;font-variant-numeric:tabular-nums}
 .kpi .s{color:var(--ink3);font-size:12px;margin-top:2px;min-height:16px;line-height:1.35}
-.kpi{display:flex;flex-direction:column;align-items:center;text-align:center}
-.kpi .spark{align-self:stretch}
+.kpi{display:flex;flex-direction:column}
 .kpi .spark{height:30px;margin-top:auto;padding-top:10px;display:block;box-sizing:content-box}
-/* headline cards (top row) are larger; the second row is compact */
-.kpi.hero{padding:18px 22px 16px}
-.kpi.hero .v{font-size:clamp(34px,3.6vw,54px);margin-top:8px}
-.kpi.hero .s{font-size:12.5px}
-.kpi.hero .spark{height:46px}
-.kpi .v[data-u]::after{content:attr(data-u);font-size:.36em;font-weight:500;letter-spacing:0;color:var(--ink3);margin-left:7px}
-/* change versus last year, top right of the card */
-.kpi .dl{position:absolute;top:14px;right:16px;font-family:var(--mono);font-size:12px;line-height:1}
-.kpi .dl:empty{display:none}
-.kpi .dl span{display:inline-block;padding:4px 9px;border-radius:999px;background:color-mix(in srgb,currentColor 14%,transparent)}
 .kpi:hover{border-color:var(--line2)}
 .card{transition:border-color .2s}
 .card:hover{border-color:var(--line2)}
@@ -259,7 +248,7 @@ td.rk{font-family:var(--mono);color:var(--ink3);width:28px}
 
 footer{margin-top:26px;color:var(--ink3);font-size:12px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
 
-@media (max-width:1100px){.ceo-grid{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}.kpi.hero:first-child{grid-column:span 2}.c7,.c6,.c5,.c4,.c3{grid-column:span 12}.insights{grid-template-columns:1fr}.dq{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:1100px){.ceo-grid{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(3,1fr)}.c7,.c6,.c5,.c4,.c3{grid-column:span 12}.insights{grid-template-columns:1fr}.dq{grid-template-columns:repeat(2,1fr)}}
 @media (max-width:560px){.top{position:static}.wrap{padding:0 14px 40px}.acts .lbl-t{display:none}.mark span{display:none}.kpis{grid-template-columns:repeat(2,1fr)}.fpanel{width:min(300px,86vw)}.dq{grid-template-columns:1fr}}
 
 @media print{
@@ -336,12 +325,12 @@ footer{margin-top:26px;color:var(--ink3);font-size:12px;display:flex;justify-con
 
   <div id="v-all">
   <section class="kpis">
-    <div class="kpi hero" style="--c:var(--gold)" title="Visa confirmations recorded in the period."><div class="l">Visas confirmed</div><span class="dl" id="k-visa-d"></span><div class="v" id="k-visa">0</div><div class="s" id="k-visa-s"></div><svg class="spark" id="sp-visa" aria-hidden="true"></svg></div>
-    <div class="kpi hero" style="--c:var(--teal)" title="Deposits paid in the period."><div class="l">Deposits paid</div><span class="dl" id="k-dep-d"></span><div class="v" id="k-dep">0</div><div class="s" id="k-dep-s"></div><svg class="spark" id="sp-dep" aria-hidden="true"></svg></div>
-    <div class="kpi hero" style="--c:var(--teal)" title="Of deposits at least 6 months old, the share that led to a visa within 400 days. Younger deposits are left out because their visas have not had time to arrive."><div class="l">Deposit → visa</div><span class="dl" id="k-conv-d"></span><div class="v" id="k-conv">0</div><div class="s" id="k-conv-s"></div><svg class="spark" id="sp-conv" aria-hidden="true"></svg></div>
-    <div class="kpi" style="--c:var(--rose)" title="Median number of days from a student's first deposit to the visa."><div class="l">Median days to visa</div><div class="v" id="k-lag" data-u="days">0</div><div class="s">from first deposit</div><svg class="spark" id="sp-lag" aria-hidden="true"></svg></div>
-    <div class="kpi" style="--c:var(--rose)" title="Deposits from the last 6 months with no visa yet. Ignores the period; respects the other filters."><div class="l">Open pipeline</div><div class="v" id="k-open">0</div><div class="s" id="k-open-s"></div><svg class="spark" id="sp-open" aria-hidden="true"></svg></div>
-    <div class="kpi" style="--c:var(--gold)" title="Visas divided by the months in the period. Months before the sheet's first record, and the unfinished newest month, are not counted as full months."><div class="l">Visas per month</div><div class="v" id="k-rate" data-u="a month">0</div><div class="s">average over the period · 3-month trend</div><svg class="spark" id="sp-rate" aria-hidden="true"></svg></div>
+    <div class="kpi" style="--c:var(--gold)"><div class="l">Visas confirmed</div><div class="v" id="k-visa">0</div><div class="s" id="k-visa-s"></div><svg class="spark" id="sp-visa" aria-hidden="true"></svg></div>
+    <div class="kpi" style="--c:var(--teal)"><div class="l">Deposits paid</div><div class="v" id="k-dep">0</div><div class="s" id="k-dep-s"></div><svg class="spark" id="sp-dep" aria-hidden="true"></svg></div>
+    <div class="kpi" style="--c:var(--teal)"><div class="l">Deposit → visa</div><div class="v" id="k-conv">0</div><div class="s" id="k-conv-s"></div><svg class="spark" id="sp-conv" aria-hidden="true"></svg></div>
+    <div class="kpi" style="--c:var(--rose)"><div class="l">Median days to visa</div><div class="v" id="k-lag">0</div><div class="s">from first deposit</div><svg class="spark" id="sp-lag" aria-hidden="true"></svg></div>
+    <div class="kpi" style="--c:var(--rose)"><div class="l">Open pipeline</div><div class="v" id="k-open">0</div><div class="s" id="k-open-s"></div><svg class="spark" id="sp-open" aria-hidden="true"></svg></div>
+    <div class="kpi" style="--c:var(--gold)"><div class="l">Visas per month</div><div class="v" id="k-rate">0</div><div class="s">average over the period · 3-month trend</div><svg class="spark" id="sp-rate" aria-hidden="true"></svg></div>
   </section>
 
   <section class="insights" id="insights"></section>
@@ -796,12 +785,11 @@ function setNum(id, v, f) {
   if (reduced()) { el.textContent = out(v); return; }
   d3.select(el).transition().duration(700).ease(d3.easeCubicOut).tween("n", () => { const i = d3.interpolateNumber(from, v); return t => { el.textContent = out(i(t)); }; });
 }
-// change versus a previous value as a small pill: ▲ 12% (or ▲ 5 pts for percentages); "" when there is nothing to compare with
-function delta(cur, prev, points) {
+function delta(cur, prev, label, points) {
   if (prev == null || (!points && !prev)) return "";
   const p = points ? (cur - prev) * 100 : (cur - prev) / prev * 100;
   if (!isFinite(p)) return "";
-  return `<span class="${p >= 0 ? "up" : "down"}">${p >= 0 ? "▲" : "▼"} ${Math.abs(p).toFixed(0)}${points ? " pts" : "%"}</span>`;
+  return `<span class="${p >= 0 ? "up" : "down"}">${p >= 0 ? "▲" : "▼"} ${Math.abs(p).toFixed(0)}${points ? " pts" : "%"}</span> ${label}`;
 }
 function axisY(svg, y, m, w) {
   svg.append("g").attr("class", "axis grid-l").attr("transform", `translate(${m.l},0)`)
@@ -809,10 +797,13 @@ function axisY(svg, y, m, w) {
 }
 
 /* ---------------- period + filter bar ---------------- */
+// the calendar month of today's date as a month index, and clamped to the months the sheet has
+const curMonth = () => { const now = new Date(); return (now.getFullYear() - Y0) * 12 + now.getMonth(); };
+const thisMonth = () => Math.min(MN, Math.max(0, curMonth()));
 function presets() {
   const jan = Math.floor(MN / 12) * 12;
   // this month and the previous calendar month, from today's date (not the newest data), clamped to the months in the sheet
-  const now = new Date(), cur = (now.getFullYear() - Y0) * 12 + now.getMonth(), lm = Math.min(MN, Math.max(0, cur - 1)), tm = Math.min(MN, Math.max(0, cur));
+  const cur = curMonth(), lm = Math.min(MN, Math.max(0, cur - 1)), tm = thisMonth();
   return [["All time", [0, MN]], ["This year", [jan, MN]], ["Last year", [Math.max(0, jan - 12), Math.max(0, jan - 1)]],
     ["Last 12 months", [Math.max(0, MN - 11), MN]], ["Last 3 months", [Math.max(0, MN - 2), MN]], ["Last month", [lm, lm]], ["This month", [tm, tm]]];
 }
@@ -909,6 +900,7 @@ function chips() {
 /* ---------------- KPIs + insights ---------------- */
 function kpis() {
   const v = sel(1), d = sel(0), vt = sum(v), dt = sum(d), len = monthsIn(state.r), yr = yoyRange();
+  const LY = "vs same period last year";
   setNum("k-visa", vt); setNum("k-dep", dt);
   const cv = conv(d);
   setNum("k-conv", cv == null ? null : cv * 100, x => Math.round(x) + "%");
@@ -916,25 +908,14 @@ function kpis() {
   const open = sel(0, null, "all").filter(isOpen), on3 = open.filter(r => r[C.m] <= MN - 3);
   setNum("k-open", sum(open));
   setNum("k-rate", len ? vt / len : null);
-  // Comparison on the three headline cards. A chosen period is compared with the same months last year; with "All time" (nothing to compare with)
-  // the cards show the last 12 months against the 12 months before, which is where the business actually is today.
-  const cmp = (kind, idp, noun) => {
-    const cur = kind ? vt : dt;
-    if (yr && !full()) {
-      const prev = sum(yoySel(kind, null, yr));
-      $("#k-" + idp + "-d").innerHTML = delta(cur, prev); $("#k-" + idp + "-s").textContent = prev ? "vs same period last year" : `no ${noun} last year`;
-    } else if (MN >= 23) {
-      const now12 = sum(sel(kind, null, [MN - 11, MN])), prev12 = sum(yoySel(kind, null, [MN - 23, MN - 12]));
-      $("#k-" + idp + "-d").innerHTML = delta(now12, prev12); $("#k-" + idp + "-s").textContent = `last 12 months: ${fmt(now12)}`;
-    } else { $("#k-" + idp + "-d").innerHTML = ""; $("#k-" + idp + "-s").textContent = "pick a period to compare with last year"; }
-  };
-  cmp(1, "visa", "visas"); cmp(0, "dep", "deposits");
   if (yr && !full()) {
+    $("#k-visa-s").innerHTML = delta(vt, sum(yoySel(1, null, yr)), LY) || "no visas last year";
+    $("#k-dep-s").innerHTML = delta(dt, sum(yoySel(0, null, yr)), LY) || "no deposits last year";
     const cp = conv(yoySel(0, null, yr));
-    $("#k-conv-d").innerHTML = cv != null && cp != null ? delta(cv, cp, true) : "";
-    $("#k-conv-s").textContent = cv != null && cp != null ? "vs same period last year" : cv == null ? "period too recent to judge" : "deposits at least 6 months old";
+    $("#k-conv-s").innerHTML = cv != null && cp != null ? delta(cv, cp, LY, true) : "deposits at least 6 months old";
   } else {
-    $("#k-conv-d").innerHTML = "";
+    $("#k-visa-s").textContent = "pick a period to compare with last year";
+    $("#k-dep-s").textContent = "pick a period to compare with last year";
     $("#k-conv-s").textContent = cv == null ? "period too recent to judge" : "deposits at least 6 months old";
   }
   $("#k-open-s").textContent = sum(open) ? `last 6 months, no visa yet · ${fmt(sum(on3))} older than 3 months` : "no open deposits";
@@ -1446,6 +1427,8 @@ function setView(v, quiet) {
   $("#views").hidden = !home; $("#vbody").hidden = home;
   $("#v-all").hidden = !all; $("#v-other").hidden = home || all; $("#ceo").hidden = !ceo; $("#prod").hidden = !prod;
   $("#home").hidden = home;
+  // the three insight cards sit under the KPI cards, except in the CEO View where they come after the "at a glance" block
+  (ceo ? $("#ceo") : $(".kpis")).after($("#insights"));
   const pill = $("#vpill"); pill.hidden = home; pill.textContent = home ? "" : VIEW[state.view].name;
   if (!home && !all) { $("#vo-name").textContent = VIEW[state.view].name; $("#vo-desc").textContent = VIEW[state.view].desc; }
   document.title = (home ? "" : VIEW[state.view].name + " · ") + "Scorp Outcomes Command Centre";
@@ -1514,7 +1497,7 @@ function applyView(v) {
   state.r = v.r ? [Math.max(0, Math.min(MN, strM(v.r[0]))), Math.max(0, Math.min(MN, strM(v.r[1])))] : [0, MN];
   if (v.lg && DIM[v.lg]) state.lg.dim = v.lg;
   if (v.tab) state.tab = v.tab;
-  state.view = v.view && VIEW[v.view] ? v.view : "home"; state.kind = v.ck === 1 ? 1 : 0;
+  state.view = v.view === "home" ? "home" : VIEW[v.view] ? v.view : "ceo"; state.kind = v.ck === 1 ? 1 : 0;
 }
 $("#share").onclick = async () => {
   const url = location.origin + location.pathname + "#sheet=" + sheetId + "&v=" + b64e(JSON.stringify(saveView()));
@@ -1542,7 +1525,8 @@ async function load(id, view) {
   gmsg("Linking deposits to visas…");
   await new Promise(r => setTimeout(r, 0)); // let the message paint before the heavy step
   D = S.buildData(v, d, RULES); MN = D.mn; Y0 = D.y0; sheetId = id;
-  DIMS.forEach(x => state[x.key] = new Set()); state.r = [0, MN]; state.view = "home";
+  // a fresh open (no saved view link) lands on the CEO View for this month; the All views button reaches the list
+  DIMS.forEach(x => state[x.key] = new Set()); state.r = [thisMonth(), thisMonth()]; state.view = "ceo";
   if (view) applyView(view);
   const asOf = new Date(D.asOf + "T00:00:00");
   $("#asof").textContent = "Live · loaded " + new Date().toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }) + " · data to " + asOf.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
