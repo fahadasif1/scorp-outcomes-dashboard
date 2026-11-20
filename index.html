@@ -74,12 +74,50 @@ button:disabled{opacity:.5;cursor:default}
 .live{display:inline-flex;align-items:center;gap:8px;font-size:12px;color:var(--ink2);border:1px solid var(--line2);border-radius:999px;padding:5px 12px;background:var(--panel)}
 .live .pulse{width:7px;height:7px}
 .acts{display:flex;gap:6px;flex-wrap:wrap}
+.acts button[hidden]{display:none}
 .acts button{display:inline-flex;align-items:center;gap:7px;font-size:13px;padding:7px 12px}
 .acts svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .acts .ico{padding:7px 9px}
 button.busy{pointer-events:none;opacity:.7}
 .spin{display:inline-block;width:13px;height:13px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:spin .8s linear infinite;vertical-align:-2px}
 @keyframes spin{to{transform:rotate(360deg)}}
+
+/* views */
+#views[hidden],#vbody[hidden],#v-other[hidden],#v-all[hidden],#home[hidden],.vpill[hidden]{display:none}
+.views{padding:34px 0 10px;text-align:center}
+.views .eyebrow{justify-content:center}
+.views h1{font-size:clamp(28px,4vw,46px);margin:8px 0 6px}
+.views .sub{max-width:620px;margin:0 auto;color:var(--ink2)}
+.vgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin:28px auto 0;max-width:1100px}
+.vcard{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;padding:22px 22px 18px;min-height:180px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(180deg,var(--panel2),var(--panel));color:var(--ink);position:relative;overflow:hidden}
+.vcard::after{content:"";position:absolute;left:0;top:0;height:2px;width:100%;background:linear-gradient(90deg,var(--c,var(--gold)),transparent)}
+.vcard:hover{border-color:var(--line2);transform:translateY(-2px)}
+.vcard .n{font-size:20px;font-weight:700;letter-spacing:-.01em}
+.vcard .t{display:block;width:100%;white-space:normal;color:var(--ink2);font-size:13.5px;line-height:1.45;flex:1}
+.vcard .go{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3)}
+.vcard:hover .go{color:var(--ink)}
+.vpill{font-size:12px;font-weight:600;border-radius:999px;padding:5px 12px;background:var(--tint);border:1px solid var(--line2);color:var(--ink)}
+.vsoon{padding:28px}
+
+/* CEO block */
+.ceo{margin-bottom:14px}
+.ceo[hidden]{display:none}
+#p-tree{margin-top:10px}
+#p-tree-n{margin-top:6px}
+.ceo-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+.ceo-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr) minmax(0,.9fr);gap:26px;margin-top:10px}
+.ceo-grid h3{font-size:13px;font-weight:600;margin:4px 0 8px;color:var(--ink)}
+.ceo-grid h3 .hint{font-weight:400;font-size:11.5px;margin-left:4px}
+.ceo-grid>div>div+h3{margin-top:18px}
+
+/* export panel */
+.xpanel{position:absolute;right:0;top:calc(100% + 6px);z-index:40;width:260px;padding:14px 16px;border:1px solid var(--line2);border-radius:14px;background:var(--panel2);box-shadow:0 10px 30px rgba(0,0,0,.35)}
+.xpanel[hidden]{display:none}
+.xpanel .xt{font-weight:600;margin-bottom:8px}
+.xrow{display:flex;align-items:center;gap:10px;padding:6px 0;cursor:pointer;font-size:14px}
+.xrow input{width:17px;height:17px;accent-color:var(--gold)}
+.xpanel .hint{margin:8px 0 12px;font-size:12px}
+.xpanel .primary{width:100%}
 
 /* filter bar */
 .bar{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:18px;padding:12px 14px;margin-bottom:12px;position:relative;z-index:10}
@@ -129,14 +167,25 @@ input[type=month]:focus{border-color:var(--gold)}
 }
 
 /* KPIs + insights */
-.kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:12px}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px}
 .kpi{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:16px;padding:16px 18px;position:relative;overflow:hidden}
 .kpi::after{content:"";position:absolute;left:0;top:0;height:2px;width:100%;background:linear-gradient(90deg,var(--c,var(--ink3)),transparent)}
 .kpi .l{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3)}
 .kpi .v{font-size:clamp(26px,2.8vw,40px);font-weight:800;letter-spacing:-.02em;margin-top:6px;font-variant-numeric:tabular-nums}
 .kpi .s{color:var(--ink3);font-size:12px;margin-top:2px;min-height:16px;line-height:1.35}
-.kpi{display:flex;flex-direction:column}
+.kpi{display:flex;flex-direction:column;align-items:center;text-align:center}
+.kpi .spark{align-self:stretch}
 .kpi .spark{height:30px;margin-top:auto;padding-top:10px;display:block;box-sizing:content-box}
+/* headline cards (top row) are larger; the second row is compact */
+.kpi.hero{padding:18px 22px 16px}
+.kpi.hero .v{font-size:clamp(34px,3.6vw,54px);margin-top:8px}
+.kpi.hero .s{font-size:12.5px}
+.kpi.hero .spark{height:46px}
+.kpi .v[data-u]::after{content:attr(data-u);font-size:.36em;font-weight:500;letter-spacing:0;color:var(--ink3);margin-left:7px}
+/* change versus last year, top right of the card */
+.kpi .dl{position:absolute;top:14px;right:16px;font-family:var(--mono);font-size:12px;line-height:1}
+.kpi .dl:empty{display:none}
+.kpi .dl span{display:inline-block;padding:4px 9px;border-radius:999px;background:color-mix(in srgb,currentColor 14%,transparent)}
 .kpi:hover{border-color:var(--line2)}
 .card{transition:border-color .2s}
 .card:hover{border-color:var(--line2)}
@@ -210,13 +259,13 @@ td.rk{font-family:var(--mono);color:var(--ink3);width:28px}
 
 footer{margin-top:26px;color:var(--ink3);font-size:12px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
 
-@media (max-width:1100px){.kpis{grid-template-columns:repeat(3,1fr)}.c7,.c6,.c5,.c4,.c3{grid-column:span 12}.insights{grid-template-columns:1fr}.dq{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:1100px){.ceo-grid{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}.kpi.hero:first-child{grid-column:span 2}.c7,.c6,.c5,.c4,.c3{grid-column:span 12}.insights{grid-template-columns:1fr}.dq{grid-template-columns:repeat(2,1fr)}}
 @media (max-width:560px){.top{position:static}.wrap{padding:0 14px 40px}.acts .lbl-t{display:none}.mark span{display:none}.kpis{grid-template-columns:repeat(2,1fr)}.fpanel{width:min(300px,86vw)}.dq{grid-template-columns:1fr}}
 
 @media print{
   @page{size:A4 landscape;margin:10mm}
   body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
-  body::before,#tip,.noprint,.tabs,.fdd,#chips button,.acts{display:none!important}
+  body::before,#tip,.noprint,.tabs,.fdd,#chips button,.acts,#views,.xpanel{display:none!important}
   .top{position:static;background:none;backdrop-filter:none}
   .wrap{max-width:none;padding:0}
   .card,.kpi,.ins,.dqc{break-inside:avoid}
@@ -243,17 +292,34 @@ footer{margin-top:26px;color:var(--ink3);font-size:12px;display:flex;justify-con
 <div id="dash" hidden>
   <header class="top">
     <div class="mark"><svg viewBox='0 0 64 64' aria-hidden='true'><defs><linearGradient id='mg' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='#ffb347'/><stop offset='1' stop-color='#ff7a59'/></linearGradient></defs><rect width='64' height='64' rx='16' fill='#070a12'/><path d='M10 46 Q32 6 54 22' fill='none' stroke='#3fd0c9' stroke-width='4' stroke-linecap='round' stroke-dasharray='1 8'/><circle cx='20' cy='42' r='9' fill='url(#mg)'/><circle cx='50' cy='22' r='6' fill='#3fd0c9'/></svg>Outcomes <span>Command Centre</span></div>
+    <span class="vpill" id="vpill" hidden></span>
     <span class="live" id="live" role="status"><span class="pulse"></span><span id="asof"></span></span>
     <span class="sp"></span>
     <div class="acts">
+      <button id="home" type="button" hidden title="Back to the list of views"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg><span class="lbl-t">All views</span></button>
       <button id="share" type="button" title="Copy a link that opens this exact view"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg><span class="lbl-t">Copy view link</span></button>
-      <button id="export" type="button" title="Download the filtered numbers as a CSV"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11"/><path d="m7 10 5 5 5-5"/><path d="M5 20h14"/></svg><span class="lbl-t">Export CSV</span></button>
+      <button id="export" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="xpanel" title="Download the filtered numbers as a CSV"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11"/><path d="m7 10 5 5 5-5"/><path d="M5 20h14"/></svg><span class="lbl-t">Export CSV</span></button>
       <button id="print" type="button" title="Print or save the current tab as PDF"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 9V4h10v5"/><rect x="4" y="9" width="16" height="7" rx="2"/><path d="M7 14h10v6H7z"/></svg><span class="lbl-t">Print</span></button>
       <button id="refresh" type="button" title="Re-read the sheet, keeping your filters"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.6"/><path d="M20 4v5h-5"/></svg><span class="lbl-t">Refresh</span></button>
       <button id="theme" type="button" class="ico" title="Switch light / dark" aria-label="Switch light or dark theme"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z"/></svg></button>
       <button id="chg" type="button" class="ico" title="Load a different sheet" aria-label="Change sheet"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h13"/><path d="m14 4 3 3-3 3"/><path d="M20 17H7"/><path d="m10 14-3 3 3 3"/></svg></button>
     </div>
+    <div class="xpanel" id="xpanel" hidden role="dialog" aria-label="Choose what to export">
+      <div class="xt">Include in the CSV</div>
+      <label class="xrow"><input type="checkbox" id="x-dep" checked> Deposits</label>
+      <label class="xrow"><input type="checkbox" id="x-vis" checked> Visas</label>
+      <div class="hint">Untick one to export only the other. Follows the period and filters.</div>
+      <button class="primary" type="button" id="x-go">Download CSV</button>
+    </div>
   </header>
+  <section id="views" class="views" hidden>
+    <div class="eyebrow"><span class="pulse"></span>Choose a view</div>
+    <h1>Who is this <em>for?</em></h1>
+    <p class="sub">Each view shows the numbers that matter to one team. You can switch at any time with the All views button at the top.</p>
+    <div class="vgrid" id="vgrid"></div>
+  </section>
+
+  <div id="vbody" hidden>
   <div class="bar">
     <div class="bar-row">
       <span class="lbl">Period</span>
@@ -268,16 +334,44 @@ footer{margin-top:26px;color:var(--ink3);font-size:12px;display:flex;justify-con
     <div class="bar-row"><div class="chips" id="chips"></div><span class="sp"></span><button id="reset" type="button" class="noprint">Reset all</button></div>
   </div>
 
+  <div id="v-all">
   <section class="kpis">
-    <div class="kpi" style="--c:var(--gold)"><div class="l">Visas confirmed</div><div class="v" id="k-visa">0</div><div class="s" id="k-visa-s"></div><svg class="spark" id="sp-visa" aria-hidden="true"></svg></div>
-    <div class="kpi" style="--c:var(--teal)"><div class="l">Deposits paid</div><div class="v" id="k-dep">0</div><div class="s" id="k-dep-s"></div><svg class="spark" id="sp-dep" aria-hidden="true"></svg></div>
-    <div class="kpi" style="--c:var(--teal)"><div class="l">Deposit → visa</div><div class="v" id="k-conv">0</div><div class="s" id="k-conv-s"></div><svg class="spark" id="sp-conv" aria-hidden="true"></svg></div>
-    <div class="kpi" style="--c:var(--rose)"><div class="l">Median days to visa</div><div class="v" id="k-lag">0</div><div class="s">from first deposit</div><svg class="spark" id="sp-lag" aria-hidden="true"></svg></div>
-    <div class="kpi" style="--c:var(--rose)"><div class="l">Open pipeline</div><div class="v" id="k-open">0</div><div class="s" id="k-open-s"></div><svg class="spark" id="sp-open" aria-hidden="true"></svg></div>
-    <div class="kpi" style="--c:var(--gold)"><div class="l">Visas per month</div><div class="v" id="k-rate">0</div><div class="s">average over the period · 3-month trend</div><svg class="spark" id="sp-rate" aria-hidden="true"></svg></div>
+    <div class="kpi hero" style="--c:var(--gold)" title="Visa confirmations recorded in the period."><div class="l">Visas confirmed</div><span class="dl" id="k-visa-d"></span><div class="v" id="k-visa">0</div><div class="s" id="k-visa-s"></div><svg class="spark" id="sp-visa" aria-hidden="true"></svg></div>
+    <div class="kpi hero" style="--c:var(--teal)" title="Deposits paid in the period."><div class="l">Deposits paid</div><span class="dl" id="k-dep-d"></span><div class="v" id="k-dep">0</div><div class="s" id="k-dep-s"></div><svg class="spark" id="sp-dep" aria-hidden="true"></svg></div>
+    <div class="kpi hero" style="--c:var(--teal)" title="Of deposits at least 6 months old, the share that led to a visa within 400 days. Younger deposits are left out because their visas have not had time to arrive."><div class="l">Deposit → visa</div><span class="dl" id="k-conv-d"></span><div class="v" id="k-conv">0</div><div class="s" id="k-conv-s"></div><svg class="spark" id="sp-conv" aria-hidden="true"></svg></div>
+    <div class="kpi" style="--c:var(--rose)" title="Median number of days from a student's first deposit to the visa."><div class="l">Median days to visa</div><div class="v" id="k-lag" data-u="days">0</div><div class="s">from first deposit</div><svg class="spark" id="sp-lag" aria-hidden="true"></svg></div>
+    <div class="kpi" style="--c:var(--rose)" title="Deposits from the last 6 months with no visa yet. Ignores the period; respects the other filters."><div class="l">Open pipeline</div><div class="v" id="k-open">0</div><div class="s" id="k-open-s"></div><svg class="spark" id="sp-open" aria-hidden="true"></svg></div>
+    <div class="kpi" style="--c:var(--gold)" title="Visas divided by the months in the period. Months before the sheet's first record, and the unfinished newest month, are not counted as full months."><div class="l">Visas per month</div><div class="v" id="k-rate" data-u="a month">0</div><div class="s">average over the period · 3-month trend</div><svg class="spark" id="sp-rate" aria-hidden="true"></svg></div>
   </section>
 
   <section class="insights" id="insights"></section>
+
+  <section class="card ceo" id="ceo" hidden>
+    <div class="ceo-head">
+      <div><h2>Deposits and visas at a glance</h2>
+        <div class="d">Follows the period and filters above. Click a brand or university to filter, a month or year to zoom to it. Daily, monthly and yearly ignore the period.</div></div>
+      <div class="seg ksw" id="ckind" role="group" aria-label="Show deposits or visas"><button type="button" data-k="0">Deposits</button><button type="button" data-k="1">Visas</button></div>
+    </div>
+    <div class="ceo-grid">
+      <div><h3>By brand</h3><div id="c-brand"></div></div>
+      <div><h3>By university</h3><div id="c-inst"></div><div class="hint" id="c-inst-n"></div></div>
+      <div>
+        <h3>Daily <span class="hint">last 14 days</span></h3><div id="c-day"></div>
+        <h3>Monthly <span class="hint">last 12 months</span></h3><div id="c-mon"></div>
+        <h3>Yearly</h3><div id="c-yr"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="card ceo" id="prod" hidden>
+    <div class="ceo-head">
+      <div><h2>Universities</h2>
+        <div class="d">Every university is named. Tile size is scaled (square root of the count) so small universities stay readable; the colour and the number are the real count. Follows the period and filters above. Click a tile to filter.</div></div>
+      <div class="seg ksw" id="pkind" role="group" aria-label="Show deposits or visas"><button type="button" data-k="0">Deposits</button><button type="button" data-k="1">Visas</button></div>
+    </div>
+    <div id="p-tree"></div>
+    <div class="hint" id="p-tree-n"></div>
+  </section>
 
   <nav class="tabs" role="tablist" aria-label="Dashboard sections">
     <button role="tab" data-tab="overview" aria-selected="true">Overview</button>
@@ -369,6 +463,15 @@ footer{margin-top:26px;color:var(--ink3);font-size:12px;display:flex;justify-con
     <div class="grid" id="dqlists"></div>
   </section>
 
+  </div><!-- /v-all -->
+
+  <section id="v-other" class="card vsoon" hidden>
+    <h2 id="vo-name"></h2>
+    <div class="d" id="vo-desc"></div>
+    <p class="hint">This view has no charts yet. They will be added here.</p>
+  </section>
+  </div><!-- /vbody -->
+
   <footer>
     <span>Read live from the Google Sheet you pasted. Nothing is stored on a server. Deposits and visas are linked by student name and brand.</span>
     <span id="foot"></span>
@@ -397,6 +500,7 @@ window.SCORP_RULES = {"brand":{"Student4uk":"Students4uk","Edmine":"EdMine","Wor
   const DUP_WINDOW = 14;    // a second deposit for the same student and brand within this many days is a likely duplicate
   const DUP_VISA_WINDOW = 30; // a second visa for the same student and brand within this many days is a likely duplicate
   const DAY = 864e5;
+  const RECENT_DAYS = 60;   // `recent` keeps day-level rows for this many days up to the newest record (for the daily chart)
 
   // cube row: [month, brand, city, university, kind (0 deposit, 1 visa), segment, destination, intake, office, matched, late, count]
   // matched = deposit later got a visa / visa has an earlier deposit
@@ -509,12 +613,16 @@ window.SCORP_RULES = {"brand":{"Student4uk":"Students4uk","Edmine":"EdMine","Wor
 
     const cube = new Map(), lag = [];
     const add = a => bump(cube, a.join());
+    // same rows as the cube, but the first column is days before the newest record (0 = newest day), last RECENT_DAYS only
+    const recent = new Map();
+    const addRecent = (r, a) => { const age = Math.round((last - r.$day) / DAY); if (age < RECENT_DAYS) bump(recent, [age].concat(a.slice(1)).join()); };
     let dupDeposits = 0;
     for (const r of dep) {
       const k = key(r), vs = k ? visaDays.get(k) : null;
       const converted = !!vs && vs.some(v => v >= r.$day && v - r.$day <= MATCH_WINDOW * DAY);
       if (k) { const same = depsByKey.get(k); const j = same.indexOf(r); if (j > 0 && r.$day - same[j - 1].$day <= DUP_WINDOW * DAY) dupDeposits++; }
-      add([r.$m, bi.get(brandOf(r)), ci.get(cityOf(r)), ii.get(instOf(r)), 0, segOf(0, r), di.get(destOf(r)), ti.get(intakeKey(r.$y, r.$mon)), pi.get(officeOf(r)), converted ? 1 : 0, lateOf(r)]);
+      const row = [r.$m, bi.get(brandOf(r)), ci.get(cityOf(r)), ii.get(instOf(r)), 0, segOf(0, r), di.get(destOf(r)), ti.get(intakeKey(r.$y, r.$mon)), pi.get(officeOf(r)), converted ? 1 : 0, lateOf(r)];
+      add(row); addRecent(r, row);
     }
     let unmatchedVisas = 0, dupVisas = 0;
     const visasByKey = new Map();
@@ -526,7 +634,8 @@ window.SCORP_RULES = {"brand":{"Student4uk":"Students4uk","Edmine":"EdMine","Wor
       const b = bi.get(brandOf(r)), c = ci.get(cityOf(r)), i = ii.get(instOf(r)), d = di.get(destOf(r)), s = segOf(1, r), p = pi.get(officeOf(r));
       const t = first ? ti.get(intakeKey(first.$y, first.$mon)) : noMatch;
       if (!first) unmatchedVisas++;
-      add([r.$m, b, c, i, 1, s, d, t, p, first ? 1 : 0, lateOf(r)]);
+      const row = [r.$m, b, c, i, 1, s, d, t, p, first ? 1 : 0, lateOf(r)];
+      add(row); addRecent(r, row);
       if (first) lag.push([r.$m, b, c, Math.round((r.$day - first.$day) / DAY), i, d, t, s, p]);
     }
 
@@ -563,6 +672,7 @@ window.SCORP_RULES = {"brand":{"Student4uk":"Students4uk","Edmine":"EdMine","Wor
       brands, cities, insts, dests, intakes, offices,
       cityRegion: cities.map(regionOf), geo: R.geo, segs: R.segs,
       cube: [...cube].map(([k, v]) => [...k.split(",").map(Number), v]),
+      recent: [...recent].map(([k, v]) => [...k.split(",").map(Number), v]), recentDays: RECENT_DAYS,
       lag, dq, totals: { visa: visa.length, deposit: dep.length },
     };
   }
@@ -617,18 +727,27 @@ DIMS.forEach(d => {
 });
 const LEAGUE = ["brand", "supplier", "city", "region", "inst", "intake", "dest"];
 
-const state = { r: [0, 0], tab: "overview", lg: { dim: "brand", sort: "vis", dir: -1, q: "", all: false } };
+/* Views: the page after loading is a list of views, each for one team. "all" is the full dashboard.
+   To add a view: add an entry here, then give it a renderer in renderView() (views without one show a placeholder). */
+const VIEWS = [
+  { id: "all", name: "All view", c: "var(--gold)", desc: "Everything in one place: KPIs, timeline, brands, map, universities, seasonality, performance table, intakes and pipeline, data quality." },
+  { id: "ceo", name: "CEO View", c: "var(--teal)", desc: "Deposits and visas by brand, university, day, month and year first, then everything in the All view." },
+  { id: "product", name: "Product team view", c: "var(--rose)", desc: "A university heat map with every university named, first under the KPI cards, then everything in the All view." },
+  { id: "finance", name: "Finance view", c: "var(--gold)", desc: "The numbers finance needs." }
+];
+const VIEW = Object.fromEntries(VIEWS.map(v => [v.id, v]));
+
+const state = { r: [0, 0], view: "home", kind: 0, tab: "overview", lg: { dim: "brand", sort: "vis", dir: -1, q: "", all: false } };
 DIMS.forEach(d => state[d.key] = new Set());
 const full = () => state.r[0] === 0 && state.r[1] === MN;
 const on = (k, i) => !state[k].size || state[k].has(i);
 function toggle(k, i) { const s = state[k]; s.has(i) ? s.delete(i) : s.add(i); renderAll(); }
 
 // rng: undefined = the selected period, "all" = no period filter, [a,b] = that range
-function sel(kind, skip, rng) {
-  const r0 = rng === "all" ? null : rng || state.r;
+function cubeSel(cube, kind, skip, r0) {
   const act = DIMS.filter(d => d.key !== skip && state[d.key].size && (!d.kinds || d.kinds.includes(kind)));
   const out = [];
-  for (const r of D.cube) {
+  for (const r of cube) {
     if (r[C.k] !== kind) continue;
     if (r0 && (r[C.m] < r0[0] || r[C.m] > r0[1])) continue;
     let ok = true;
@@ -637,6 +756,7 @@ function sel(kind, skip, rng) {
   }
   return out;
 }
+function sel(kind, skip, rng) { return cubeSel(D.cube, kind, skip, rng === "all" ? null : rng || state.r); }
 function lagRows(skip, rng) {
   const r0 = rng === "all" ? null : rng || state.r;
   const act = DIMS.filter(d => d.key !== skip && d.lg && state[d.key].size);
@@ -676,11 +796,12 @@ function setNum(id, v, f) {
   if (reduced()) { el.textContent = out(v); return; }
   d3.select(el).transition().duration(700).ease(d3.easeCubicOut).tween("n", () => { const i = d3.interpolateNumber(from, v); return t => { el.textContent = out(i(t)); }; });
 }
-function delta(cur, prev, label, points) {
+// change versus a previous value as a small pill: ▲ 12% (or ▲ 5 pts for percentages); "" when there is nothing to compare with
+function delta(cur, prev, points) {
   if (prev == null || (!points && !prev)) return "";
   const p = points ? (cur - prev) * 100 : (cur - prev) / prev * 100;
   if (!isFinite(p)) return "";
-  return `<span class="${p >= 0 ? "up" : "down"}">${p >= 0 ? "▲" : "▼"} ${Math.abs(p).toFixed(0)}${points ? " pts" : "%"}</span> ${label}`;
+  return `<span class="${p >= 0 ? "up" : "down"}">${p >= 0 ? "▲" : "▼"} ${Math.abs(p).toFixed(0)}${points ? " pts" : "%"}</span>`;
 }
 function axisY(svg, y, m, w) {
   svg.append("g").attr("class", "axis grid-l").attr("transform", `translate(${m.l},0)`)
@@ -690,10 +811,10 @@ function axisY(svg, y, m, w) {
 /* ---------------- period + filter bar ---------------- */
 function presets() {
   const jan = Math.floor(MN / 12) * 12;
-  // previous calendar month, from today's date (not the newest data), clamped to the months in the sheet
-  const now = new Date(), lm = Math.min(MN, Math.max(0, (now.getFullYear() - Y0) * 12 + now.getMonth() - 1));
+  // this month and the previous calendar month, from today's date (not the newest data), clamped to the months in the sheet
+  const now = new Date(), cur = (now.getFullYear() - Y0) * 12 + now.getMonth(), lm = Math.min(MN, Math.max(0, cur - 1)), tm = Math.min(MN, Math.max(0, cur));
   return [["All time", [0, MN]], ["This year", [jan, MN]], ["Last year", [Math.max(0, jan - 12), Math.max(0, jan - 1)]],
-    ["Last 12 months", [Math.max(0, MN - 11), MN]], ["Last 3 months", [Math.max(0, MN - 2), MN]], ["Last month", [lm, lm]]];
+    ["Last 12 months", [Math.max(0, MN - 11), MN]], ["Last 3 months", [Math.max(0, MN - 2), MN]], ["Last month", [lm, lm]], ["This month", [tm, tm]]];
 }
 function periodUI() {
   const p = $("#presets"); p.innerHTML = "";
@@ -788,7 +909,6 @@ function chips() {
 /* ---------------- KPIs + insights ---------------- */
 function kpis() {
   const v = sel(1), d = sel(0), vt = sum(v), dt = sum(d), len = monthsIn(state.r), yr = yoyRange();
-  const LY = "vs same period last year";
   setNum("k-visa", vt); setNum("k-dep", dt);
   const cv = conv(d);
   setNum("k-conv", cv == null ? null : cv * 100, x => Math.round(x) + "%");
@@ -796,14 +916,25 @@ function kpis() {
   const open = sel(0, null, "all").filter(isOpen), on3 = open.filter(r => r[C.m] <= MN - 3);
   setNum("k-open", sum(open));
   setNum("k-rate", len ? vt / len : null);
+  // Comparison on the three headline cards. A chosen period is compared with the same months last year; with "All time" (nothing to compare with)
+  // the cards show the last 12 months against the 12 months before, which is where the business actually is today.
+  const cmp = (kind, idp, noun) => {
+    const cur = kind ? vt : dt;
+    if (yr && !full()) {
+      const prev = sum(yoySel(kind, null, yr));
+      $("#k-" + idp + "-d").innerHTML = delta(cur, prev); $("#k-" + idp + "-s").textContent = prev ? "vs same period last year" : `no ${noun} last year`;
+    } else if (MN >= 23) {
+      const now12 = sum(sel(kind, null, [MN - 11, MN])), prev12 = sum(yoySel(kind, null, [MN - 23, MN - 12]));
+      $("#k-" + idp + "-d").innerHTML = delta(now12, prev12); $("#k-" + idp + "-s").textContent = `last 12 months: ${fmt(now12)}`;
+    } else { $("#k-" + idp + "-d").innerHTML = ""; $("#k-" + idp + "-s").textContent = "pick a period to compare with last year"; }
+  };
+  cmp(1, "visa", "visas"); cmp(0, "dep", "deposits");
   if (yr && !full()) {
-    $("#k-visa-s").innerHTML = delta(vt, sum(yoySel(1, null, yr)), LY) || "no visas last year";
-    $("#k-dep-s").innerHTML = delta(dt, sum(yoySel(0, null, yr)), LY) || "no deposits last year";
     const cp = conv(yoySel(0, null, yr));
-    $("#k-conv-s").innerHTML = cv != null && cp != null ? delta(cv, cp, LY, true) : "deposits at least 6 months old";
+    $("#k-conv-d").innerHTML = cv != null && cp != null ? delta(cv, cp, true) : "";
+    $("#k-conv-s").textContent = cv != null && cp != null ? "vs same period last year" : cv == null ? "period too recent to judge" : "deposits at least 6 months old";
   } else {
-    $("#k-visa-s").textContent = "pick a period to compare with last year";
-    $("#k-dep-s").textContent = "pick a period to compare with last year";
+    $("#k-conv-d").innerHTML = "";
     $("#k-conv-s").textContent = cv == null ? "period too recent to judge" : "deposits at least 6 months old";
   }
   $("#k-open-s").textContent = sum(open) ? `last 6 months, no visa yet · ${fmt(sum(on3))} older than 3 months` : "no open deposits";
@@ -845,7 +976,7 @@ function sparks(v, d) {
 function sparkBars(id, pts, color, label) {
   const el = $(id); if (!el) return;
   const s = d3.select(el); s.selectAll("*").remove();
-  const w = el.clientWidth || 200, h = 30; s.attr("viewBox", `0 0 ${w} ${h}`);
+  const w = el.clientWidth || 200, h = parseFloat(getComputedStyle(el).height) || 30; s.attr("viewBox", `0 0 ${w} ${h}`);
   const x = d3.scaleBand(pts.map(p => p[0]), [0, w]).padding(.25), y = d3.scaleLinear([0, d3.max(pts, p => p[1]) || 1], [h, 2]);
   s.selectAll("rect").data(pts).join("rect").attr("x", p => x(p[0])).attr("width", x.bandwidth()).attr("y", p => y(p[1])).attr("height", p => h - y(p[1])).attr("rx", 2)
     .style("fill", p => color(p[0])).on("mousemove", (e, p) => showTip(e, `<b>Paid ${mLabel(p[0])}</b><br>${label(p[1])}`)).on("mouseleave", hideTip);
@@ -853,7 +984,7 @@ function sparkBars(id, pts, color, label) {
 function spark(id, pts, color, label, dom) {
   const el = $(id); if (!el) return;
   const s = d3.select(el); s.selectAll("*").remove();
-  const w = el.clientWidth || 200, h = 30; s.attr("viewBox", `0 0 ${w} ${h}`);
+  const w = el.clientWidth || 200, h = parseFloat(getComputedStyle(el).height) || 30; s.attr("viewBox", `0 0 ${w} ${h}`);
   if (pts.length < 2) return;
   const x = d3.scaleLinear(d3.extent(pts, p => p[0]), [2, w - 3]), y = d3.scaleLinear(dom || [0, d3.max(pts, p => p[1]) || 1], [h - 2, 3]);
   s.append("path").attr("d", d3.area().curve(d3.curveMonotoneX).x(p => x(p[0])).y0(h).y1(p => y(p[1]))(pts)).style("fill", color).style("fill-opacity", .14);
@@ -1200,6 +1331,101 @@ function quality() {
     list("Brand spellings merged", "Already handled by rules.json → brand. Fixing them in the sheet is cleaner.", q.mergedBrands);
 }
 
+/* ---------------- CEO block: ranked bars + daily / monthly / yearly ---------------- */
+// rows: [{ label, v, id?, on?, muted?, tip }]. id makes a row clickable (opts.click(id)).
+function hbars(id, rows, o) {
+  const rh = o.rh || 21, { svg, w } = mk(id, Math.max(rows.length, 1) * rh + 4);
+  if (!rows.length) { svg.append("text").attr("y", 16).style("fill", "var(--ink3)").style("font-size", "12px").text("Nothing in this view."); return; }
+  const lw = Math.min(o.lw || 150, Math.round(w * 0.5)), maxc = Math.floor((lw - 8) / 6.2);
+  const x = d3.scaleLinear([0, d3.max(rows, r => r.v) || 1], [0, Math.max(30, w - lw - 52)]);
+  rows.forEach((r, i) => {
+    const click = r.id != null && o.click, dim = r.on === false;
+    const g = svg.append("g").attr("class", click ? "clickable row-hit" : null).attr("transform", `translate(0,${i * rh})`)
+      .on("mousemove", e => showTip(e, r.tip || `<b>${esc(r.label)}</b><br>${fmt(r.v)}`)).on("mouseleave", hideTip);
+    if (click) g.on("click", () => o.click(r.id));
+    g.append("rect").attr("width", w).attr("height", rh).style("fill", "transparent");
+    g.append("text").attr("x", lw - 8).attr("y", rh / 2 + 4).attr("text-anchor", "end").style("font-size", "12px").style("fill", dim ? "var(--ink3)" : "var(--ink2)").text(trunc(r.label, maxc));
+    g.append("rect").attr("class", "bar-v").attr("x", lw).attr("y", 3).attr("height", rh - 6).attr("rx", 3).style("fill", r.muted ? "var(--ink3)" : o.color)
+      .attr("opacity", dim ? .3 : r.muted ? .5 : 1).attr("width", 0).transition().duration(reduced() ? 0 : 500).delay(reduced() ? 0 : i * 12).attr("width", r.v ? Math.max(2, x(r.v)) : 0);
+    g.append("text").attr("x", lw + x(r.v) + 6).attr("y", rh / 2 + 4).style("fill", "var(--ink)").style("font-family", "var(--mono)").style("font-size", "11px").text(fmt(r.v));
+  });
+}
+function ranked(map, nameOf, key, top, extraOthers) {
+  const all = [...map].sort((a, b) => b[1] - a[1]);
+  const head = all.slice(0, top);
+  state[key].forEach(i => { if (!head.find(r => r[0] === i)) { const f = all.find(r => r[0] === i); head.push(f || [i, 0]); } });
+  let others = all.filter(r => !head.includes(r)).reduce((a, r) => a + r[1], 0) + (extraOthers || 0);
+  const rows = head.map(([i, v]) => ({ id: i, label: nameOf(i), v, on: on(key, i) }));
+  if (others) rows.push({ label: "Others", v: others, muted: true, tip: `<b>Others</b><br>${fmt(others)}<br><span class="hint">everything below the top ${top}</span>` });
+  return rows;
+}
+function ceoBlock() {
+  const kind = state.kind, color = kind ? "var(--gold)" : "var(--teal)", what = kind ? "visas" : "deposits";
+  $$(".ksw button").forEach(b => b.classList.toggle("on", +b.dataset.k === kind));
+  hbars("#c-brand", ranked(by(sel(kind, "brand"), col(C.b)), i => D.brands[i], "brand", 24), { color, lw: 150, click: i => toggle("brand", i) });
+
+  // universities: the ones that are named; "not recorded" is counted separately, "other / not listed" joins Others
+  const iv = by(sel(kind, "inst"), col(C.i)), nr = D.insts.indexOf("Not recorded"), ol = D.insts.indexOf("Other / not listed");
+  const named = new Map([...iv].filter(([i]) => i !== nr && i !== ol));
+  hbars("#c-inst", ranked(named, i => D.insts[i], "inst", 24, iv.get(ol) || 0), { color, lw: 200, click: i => toggle("inst", i) });
+  $("#c-inst-n").textContent = iv.get(nr) ? `${fmt(iv.get(nr))} ${what} have no university recorded and are not shown.` : "";
+
+  // daily: last 14 days up to the newest record, other filters applied, period ignored
+  const dv = by(cubeSel(D.recent, kind, null, null), col(C.m)), end = new Date(D.asOf + "T00:00:00"), days = [];
+  for (let a = 0; a < 14; a++) { const d = new Date(end); d.setDate(d.getDate() - a); days.push({ label: d.toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" }), v: dv.get(a) || 0 }); }
+  hbars("#c-day", days, { color, lw: 90, rh: 19 });
+
+  // monthly: last 12 months; yearly: every year. Click zooms the period.
+  const mv = by(sel(kind, null, "all"), col(C.m)), months = [];
+  for (let m = MN; m > MN - 12 && m >= 0; m--) months.push({ id: m, label: mLabel(m), v: mv.get(m) || 0, on: full() || (m >= state.r[0] && m <= state.r[1]), tip: `<b>${mLabel(m)}</b><br>${fmt(mv.get(m) || 0)} ${what}${m === MN ? "<br><span class='hint'>month not finished</span>" : ""}` });
+  hbars("#c-mon", months, { color, lw: 90, rh: 19, click: m => { state.r = [m, m]; renderAll(); } });
+  const yv = new Map(); for (const [m, n] of mv) yv.set(Math.floor(m / 12), (yv.get(Math.floor(m / 12)) || 0) + n);
+  const years = [...yv.keys()].sort((a, b) => b - a).map(y => ({ id: y, label: String(Y0 + y), v: yv.get(y), on: full() || (state.r[0] <= y * 12 + 11 && state.r[1] >= y * 12), tip: `<b>${Y0 + y}</b><br>${fmt(yv.get(y))} ${what}${y * 12 + 11 >= MN ? "<br><span class='hint'>year not finished</span>" : ""}` }));
+  hbars("#c-yr", years, { color, lw: 90, rh: 22, click: y => { state.r = [y * 12, Math.min(MN, y * 12 + 11)]; renderAll(); } });
+}
+$$(".ksw button").forEach(b => b.onclick = () => { state.kind = +b.dataset.k; renderAll(); });
+
+/* ---------------- Product view: university heat map with every name shown ---------------- */
+// wrap a name into at most `maxLines` lines of about `cpl` characters; the last line is cut with an ellipsis if the name still does not fit
+function wrapName(s, cpl, maxLines) {
+  const words = s.split(/\s+/), lines = []; let cur = "";
+  for (const w of words) {
+    if (!cur) cur = w; else if ((cur + " " + w).length <= cpl) cur += " " + w; else { lines.push(cur); cur = w; }
+  }
+  if (cur) lines.push(cur);
+  if (lines.length > maxLines) { const keep = lines.slice(0, maxLines); keep[maxLines - 1] = trunc(lines.slice(maxLines - 1).join(" "), cpl); return keep; }
+  return lines.map(l => trunc(l, cpl));
+}
+function prodBlock() {
+  const kind = state.kind, what = kind ? "visas" : "deposits";
+  $$(".ksw button").forEach(b => b.classList.toggle("on", +b.dataset.k === kind));
+  const iv = by(sel(kind, "inst"), col(C.i)), nr = D.insts.indexOf("Not recorded"), ol = D.insts.indexOf("Other / not listed");
+  const all = [...iv].filter(([i]) => i !== nr && i !== ol).sort((a, b) => b[1] - a[1]);
+  const TOP = 40, head = all.slice(0, TOP);
+  state.inst.forEach(i => { if (i !== nr && i !== ol && !head.find(r => r[0] === i)) head.push([i, iv.get(i) || 0]); });
+  const rest = all.filter(r => !head.includes(r)).reduce((a, r) => a + r[1], 0) + (iv.get(ol) || 0);
+  const kids = head.map(([i, n]) => ({ i, n, name: D.insts[i] })); if (rest) kids.push({ i: -1, n: rest, name: "Everything else" });
+  const w0 = $("#p-tree").clientWidth || 900, h = w0 < 600 ? 900 : 640, { svg, w } = mk("#p-tree", h);
+  $("#p-tree-n").textContent = iv.get(nr) ? `${fmt(iv.get(nr))} ${what} have no university recorded and are not shown.` : "";
+  if (!kids.length) { svg.append("text").attr("x", 10).attr("y", 30).style("fill", "var(--ink3)").text("Nothing in this view."); return; }
+  // tile area follows the square root of the count, so small universities stay big enough to carry their name; colour and number are the real count
+  const root = d3.treemap().size([w, h]).paddingInner(3).round(true).tile(d3.treemapSquarify)(d3.hierarchy({ children: kids }).sum(d => Math.sqrt(d.n)));
+  const mx = d3.max(kids.filter(k => k.i >= 0), d => d.n) || 1;
+  const g = svg.selectAll("g").data(root.leaves()).join("g").attr("transform", d => `translate(${d.x0},${d.y0})`).attr("class", d => d.data.i >= 0 ? "clickable" : null)
+    .on("click", (e, d) => { if (d.data.i >= 0) toggle("inst", d.data.i); })
+    .on("mousemove", (e, d) => showTip(e, `<b>${esc(d.data.name)}</b><br>${fmt(d.data.n)} ${what}`)).on("mouseleave", hideTip);
+  g.append("rect").attr("rx", 8).attr("width", 0).attr("height", 0).style("fill", d => d.data.i < 0 ? "var(--line)" : GOLD(Math.pow(d.data.n / mx, .45)))
+    .attr("opacity", d => d.data.i < 0 || on("inst", d.data.i) ? 1 : .28).transition().duration(reduced() ? 0 : 600).attr("width", d => d.x1 - d.x0).attr("height", d => d.y1 - d.y0);
+  g.each(function (d) {
+    const ww = d.x1 - d.x0, hh = d.y1 - d.y0, light = d.data.i >= 0 && Math.pow(d.data.n / mx, .45) > .45;
+    const fs = ww > 170 && hh > 70 ? 14 : ww > 110 ? 12 : 10.5, cpl = Math.max(4, Math.floor((ww - 16) / (fs * .56)));
+    const maxLines = Math.max(1, Math.floor((hh - 14 - fs - 6) / (fs * 1.25)));
+    const lines = wrapName(d.data.name, cpl, Math.min(4, maxLines)), t = d3.select(this).append("text").attr("x", 8).style("font-weight", 600).style("font-size", fs + "px").style("fill", light ? "#1a1005" : "var(--ink)");
+    lines.forEach((l, k) => t.append("tspan").attr("x", 8).attr("y", 8 + fs + k * fs * 1.25).text(l));
+    d3.select(this).append("text").attr("x", 8).attr("y", 8 + fs + lines.length * fs * 1.25 + 4).style("fill", light ? "#3a2a0e" : "var(--ink)").style("font-family", "var(--mono)").style("font-size", "11px").text(fmt(d.data.n));
+  });
+}
+
 /* ---------------- render + tabs ---------------- */
 function renderTab(skip) {
   if (state.tab === "overview") { if (skip !== "timeline") timeline(); brandsChart(); mapChart(); treeChart(); lagChart(); heatChart(); srcBar(); supChart(); }
@@ -1210,8 +1436,30 @@ function renderTab(skip) {
 function renderAll(skip) {
   if (!D) return;
   readTheme();
-  periodUI(); filterUI(); chips(); kpis(); renderTab(skip);
+  if (state.view === "home") return;
+  periodUI(); filterUI(); chips();
+  if (state.view !== "home") { kpis(); if (state.view === "ceo") ceoBlock(); if (state.view === "product") prodBlock(); renderTab(skip); }
 }
+function setView(v, quiet) {
+  state.view = v === "home" || VIEW[v] ? v : "home";
+  const home = state.view === "home", ceo = state.view === "ceo", prod = state.view === "product", all = state.view === "all" || ceo || prod;
+  $("#views").hidden = !home; $("#vbody").hidden = home;
+  $("#v-all").hidden = !all; $("#v-other").hidden = home || all; $("#ceo").hidden = !ceo; $("#prod").hidden = !prod;
+  $("#home").hidden = home;
+  const pill = $("#vpill"); pill.hidden = home; pill.textContent = home ? "" : VIEW[state.view].name;
+  if (!home && !all) { $("#vo-name").textContent = VIEW[state.view].name; $("#vo-desc").textContent = VIEW[state.view].desc; }
+  document.title = (home ? "" : VIEW[state.view].name + " · ") + "Scorp Outcomes Command Centre";
+  ["#share", "#export", "#print"].forEach(id => $(id).hidden = home);
+  hideTip(); if (typeof closeExport === "function") closeExport();
+  if (all) setTab(state.tab, true);
+  if (ceo || prod) $$(".ksw button").forEach(b => b.classList.toggle("on", +b.dataset.k === state.kind));
+  if (!quiet) { window.scrollTo(0, 0); renderAll(); }
+}
+function buildViews() {
+  $("#vgrid").innerHTML = VIEWS.map(v => `<button type="button" class="vcard" data-v="${v.id}" style="--c:${v.c}"><span class="n">${esc(v.name)}</span><span class="t">${esc(v.desc)}</span><span class="go">Open →</span></button>`).join("");
+  $$("#vgrid .vcard").forEach(b => b.onclick = () => setView(b.dataset.v));
+}
+$("#home").onclick = () => setView("home");
 function setTab(t, quiet) {
   state.tab = t;
   $$(".tabs [data-tab]").forEach(b => b.setAttribute("aria-selected", b.dataset.tab === t));
@@ -1224,22 +1472,34 @@ $("#reset").onclick = () => { DIMS.forEach(d => state[d.key].clear()); state.r =
 $("#print").onclick = () => window.print();
 
 /* ---------------- export ---------------- */
-$("#export").onclick = () => {
+const xp = $("#xpanel"), xd = $("#x-dep"), xv = $("#x-vis");
+function closeExport() { xp.hidden = true; $("#export").setAttribute("aria-expanded", "false"); }
+$("#export").onclick = e => { e.stopPropagation(); const open = xp.hidden; xp.hidden = !open; $("#export").setAttribute("aria-expanded", open); };
+xp.onclick = e => e.stopPropagation();
+document.addEventListener("click", closeExport);
+addEventListener("keydown", e => { if (e.key === "Escape") closeExport(); });
+[xd, xv].forEach(c => c.onchange = () => { $("#x-go").disabled = !xd.checked && !xv.checked; });
+$("#x-go").onclick = () => {
+  const kinds = [xd.checked && 0, xv.checked && 1].filter(k => k !== false);
+  if (!kinds.length) return;
   const agg = new Map();
-  for (const kind of [0, 1]) for (const r of sel(kind)) {
+  for (const kind of kinds) for (const r of sel(kind)) {
     const k = [r[C.m], r[C.b], r[C.c], r[C.i], r[C.d], r[C.t], r[C.p]].join(), a = agg.get(k) || [0, 0, 0];
     a[kind ? 2 : 0] += r[C.n]; if (!kind) a[1] += r[C.x] * r[C.n]; agg.set(k, a);
   }
   const q = s => '"' + String(s).replace(/"/g, '""') + '"';
-  const lines = ["Month,Brand,City,Region,University,Destination,Intake,Partner office,Deposits,Deposits that became a visa,Visas"];
+  const wantD = kinds.includes(0), wantV = kinds.includes(1);
+  const lines = ["Month,Brand,City,Region,University,Destination,Intake,Partner office" + (wantD ? ",Deposits,Deposits that became a visa" : "") + (wantV ? ",Visas" : "")];
   for (const [k, a] of agg) {
     const [m, b, c, i, d, t, p] = k.split(",").map(Number);
-    lines.push([mStr(m), q(D.brands[b]), q(D.cities[c]), q(S.REGIONS[D.cityRegion[c]]), q(D.insts[i]), q(D.dests[d]), q(D.intakes[t]), q(D.offices[p]), a[0], a[1], a[2]].join(","));
+    lines.push([mStr(m), q(D.brands[b]), q(D.cities[c]), q(S.REGIONS[D.cityRegion[c]]), q(D.insts[i]), q(D.dests[d]), q(D.intakes[t]), q(D.offices[p])]
+      .concat(wantD ? [a[0], a[1]] : [], wantV ? [a[2]] : []).join(","));
   }
   const a = document.createElement("a");
   a.href = URL.createObjectURL(new Blob([lines.join("\n")], { type: "text/csv" }));
-  a.download = `scorp-outcomes-${mStr(state.r[0])}-to-${mStr(state.r[1])}.csv`; a.click();
+  a.download = `scorp-outcomes-${wantD && wantV ? "" : wantD ? "deposits-" : "visas-"}${mStr(state.r[0])}-to-${mStr(state.r[1])}.csv`; a.click();
   setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  closeExport();
 };
 
 /* ---------------- shareable views ---------------- */
@@ -1247,13 +1507,14 @@ const b64e = s => btoa(String.fromCharCode(...new TextEncoder().encode(s))).repl
 const b64d = s => new TextDecoder().decode(Uint8Array.from(atob(s.replace(/-/g, "+").replace(/_/g, "/")), c => c.charCodeAt(0)));
 function saveView() {
   const f = {}; DIMS.forEach(d => { if (state[d.key].size) f[d.key] = [...state[d.key]].map(i => d.list()[i]); });
-  return { f, r: full() ? null : [mStr(state.r[0]), mStr(state.r[1])], tab: state.tab, lg: state.lg.dim };
+  return { f, r: full() ? null : [mStr(state.r[0]), mStr(state.r[1])], view: state.view, ck: state.kind, tab: state.tab, lg: state.lg.dim };
 }
 function applyView(v) {
   DIMS.forEach(d => { state[d.key] = new Set(); (v.f && v.f[d.key] || []).forEach(n => { const i = d.list().indexOf(n); if (i >= 0) state[d.key].add(i); }); });
   state.r = v.r ? [Math.max(0, Math.min(MN, strM(v.r[0]))), Math.max(0, Math.min(MN, strM(v.r[1])))] : [0, MN];
   if (v.lg && DIM[v.lg]) state.lg.dim = v.lg;
   if (v.tab) state.tab = v.tab;
+  state.view = v.view && VIEW[v.view] ? v.view : "home"; state.kind = v.ck === 1 ? 1 : 0;
 }
 $("#share").onclick = async () => {
   const url = location.origin + location.pathname + "#sheet=" + sheetId + "&v=" + b64e(JSON.stringify(saveView()));
@@ -1281,13 +1542,13 @@ async function load(id, view) {
   gmsg("Linking deposits to visas…");
   await new Promise(r => setTimeout(r, 0)); // let the message paint before the heavy step
   D = S.buildData(v, d, RULES); MN = D.mn; Y0 = D.y0; sheetId = id;
-  DIMS.forEach(x => state[x.key] = new Set()); state.r = [0, MN];
+  DIMS.forEach(x => state[x.key] = new Set()); state.r = [0, MN]; state.view = "home";
   if (view) applyView(view);
   const asOf = new Date(D.asOf + "T00:00:00");
   $("#asof").textContent = "Live · loaded " + new Date().toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }) + " · data to " + asOf.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
   $("#foot").textContent = `${fmt(D.totals.visa)} visa and ${fmt(D.totals.deposit)} deposit records`;
   $("#gate").hidden = true; $("#dash").hidden = false;
-  buildFilterBar(); setTab(state.tab, true); renderAll();
+  buildFilterBar(); buildViews(); setView(state.view, true); renderAll();
 }
 async function go(link, view, refreshing) {
   const id = idOf(link);
