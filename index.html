@@ -191,6 +191,47 @@ input[type=month]:focus{border-color:var(--gold)}
 .ai-empty{color:var(--ink2);margin:10px 0 0}
 .ai-load{color:var(--ink3);margin:10px 0 0}
 
+/* AI analysis page */
+.acts .aibtn{background:linear-gradient(135deg,var(--gold),#ff7a59);color:#1a1005;border:0;font-weight:600}
+.acts .aibtn:hover{color:#1a1005;filter:brightness(1.07)}
+.acts .aibtn svg{stroke:#1a1005}
+.aipage[hidden]{display:none}
+.aip-top{margin:18px 0 12px}
+.aip-top button{display:inline-flex;align-items:center;gap:6px;font-size:13px;padding:7px 14px}
+.aip-top svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.aip-sum{font-size:clamp(17px,1.7vw,21px);line-height:1.5;font-weight:600;margin:12px 0 0;max-width:1000px}
+.aip-stats{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin:14px 0}
+.aip-stat{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.aip-stat .l{font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink3)}
+.aip-stat .v{font-size:26px;font-weight:800;letter-spacing:-.02em;margin-top:4px;font-variant-numeric:tabular-nums}
+.aip-stat .s{font-size:12px;color:var(--ink3);margin-top:2px;line-height:1.35}
+.aip-sec{margin-bottom:14px}
+.aip-sec h2{font-size:16px;margin:0 0 4px}
+.aip-sec .d{color:var(--ink3);font-size:12.5px;margin-bottom:10px}
+.aip-two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-bottom:14px}
+.aip-two .card{margin:0}
+.aip-list{margin:0;padding:0;list-style:none;display:grid;gap:8px}
+.aip-list li{padding:10px 14px;border-left:2px solid var(--gold);background:var(--tint);border-radius:0 10px 10px 0;color:var(--ink2);line-height:1.45}
+.aip-tbl{width:100%;border-collapse:collapse;font-size:13px}
+.aip-tbl th{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);text-align:left;font-weight:500;padding:6px 10px;border-bottom:1px solid var(--line)}
+.aip-tbl td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+.aip-tbl td.n,.aip-tbl th.n{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--mono);white-space:nowrap}
+.aip-tbl tr:last-child td{border-bottom:0}
+.aip-tbl .why{color:var(--ink2);min-width:220px}
+.aip-wrap{overflow-x:auto}
+.vt{display:inline-block;font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;padding:3px 9px;border-radius:999px;color:var(--tc);border:1px solid color-mix(in srgb,var(--tc) 45%,transparent);background:color-mix(in srgb,var(--tc) 10%,transparent)}
+.dl{font-size:11.5px;margin-left:5px}
+.aip-fc{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.aip-fc>div{padding:14px 16px;border:1px solid var(--line);border-radius:12px;background:var(--panel2)}
+.aip-fc b{display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink3);font-weight:500;margin-bottom:6px}
+.aip-fc p{margin:0;color:var(--ink2);line-height:1.5}
+.aip-act{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.aip-act h3{font-size:12px;font-family:var(--mono);letter-spacing:.13em;text-transform:uppercase;color:var(--gold);margin:0 0 8px;font-weight:600}
+.aip-act .a{padding:11px 14px;border:1px solid var(--line);border-radius:12px;background:var(--panel2);margin-bottom:8px}
+.aip-act .a b{display:block;font-weight:700;line-height:1.35}
+.aip-act .a span{display:block;color:var(--ink3);font-size:12.5px;margin-top:3px}
+.aip-none{color:var(--ink2);padding:6px 0}
+
 /* KPIs + insights */
 .kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:12px}
 .kpi{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:16px;padding:16px 18px;position:relative;overflow:hidden}
@@ -273,8 +314,8 @@ td.rk{font-family:var(--mono);color:var(--ink3);width:28px}
 
 footer{margin-top:26px;color:var(--ink3);font-size:12px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
 
-@media (max-width:1100px){.ceo-grid.two,.ceo-grid.three{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(3,1fr)}.c7,.c6,.c5,.c4,.c3{grid-column:span 12}.insights{grid-template-columns:1fr}.dq{grid-template-columns:repeat(2,1fr)}}
-@media (max-width:560px){.top{position:static}.wrap{padding:0 14px 40px}.acts .lbl-t{display:none}.mark span{display:none}.kpis{grid-template-columns:repeat(2,1fr)}.fpanel{width:min(300px,86vw)}.dq{grid-template-columns:1fr}}
+@media (max-width:1100px){.aip-stats{grid-template-columns:repeat(3,1fr)}.aip-two,.aip-fc,.aip-act{grid-template-columns:1fr}.ceo-grid.two,.ceo-grid.three{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(3,1fr)}.c7,.c6,.c5,.c4,.c3{grid-column:span 12}.insights{grid-template-columns:1fr}.dq{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:560px){.aip-stats{grid-template-columns:repeat(2,1fr)}.top{position:static}.wrap{padding:0 14px 40px}.acts .lbl-t{display:none}.mark span{display:none}.kpis{grid-template-columns:repeat(2,1fr)}.fpanel{width:min(300px,86vw)}.dq{grid-template-columns:1fr}}
 
 @media print{
   @page{size:A4 landscape;margin:10mm}
@@ -310,6 +351,7 @@ footer{margin-top:26px;color:var(--ink3);font-size:12px;display:flex;justify-con
     <span class="live" id="live" role="status"><span class="pulse"></span><span id="asof"></span></span>
     <span class="sp"></span>
     <div class="acts">
+      <button id="aibtn" type="button" class="aibtn" title="Open the full AI analysis page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l1.9 6.1L20 10l-6.1 1.9L12 18l-1.9-6.1L4 10l6.1-1.9z"/><path d="M19 15l.9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9z"/></svg><span class="lbl-t">AI analysis</span></button>
       <button id="home" type="button" hidden title="Back to the list of views"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg><span class="lbl-t">All views</span></button>
       <button id="share" type="button" title="Copy a link that opens this exact view"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg><span class="lbl-t">Copy view link</span></button>
       <button id="export" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="xpanel" title="Download the filtered numbers as a CSV"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11"/><path d="m7 10 5 5 5-5"/><path d="M5 20h14"/></svg><span class="lbl-t">Export CSV</span></button>
@@ -326,6 +368,11 @@ footer{margin-top:26px;color:var(--ink3);font-size:12px;display:flex;justify-con
       <button class="primary" type="button" id="x-go">Download CSV</button>
     </div>
   </header>
+  <section id="aipage" class="aipage" hidden aria-label="AI analysis">
+    <div class="aip-top noprint"><button id="aip-back" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>Back to the dashboard</button></div>
+    <div id="aip-body"></div>
+  </section>
+
   <section id="views" class="views" hidden>
     <div class="eyebrow"><span class="pulse"></span>Choose a view</div>
     <h1>Who is this <em>for?</em></h1>
@@ -706,6 +753,109 @@ window.SCORP_RULES = {"brand":{"Student4uk":"Students4uk","Edmine":"EdMine","Wor
 
 </script>
 <script>
+/* Digest for the AI analysis: turns the data cube into a small, name-free fact sheet (counts only).
+   No DOM, no student names. Used by the Apps Script (apps-script/Code.gs is built from this file) and tested in node. */
+(function (root) {
+  "use strict";
+  const S = typeof require === "function" && typeof module === "object" ? require("./data.js") : root.ScorpData;
+  const C = S.C, L = S.L;
+  const MATURE = 6;   // months a deposit needs before its conversion counts (same as the dashboard)
+  const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const pct = (a, b) => b ? Math.round(1000 * a / b) / 10 : null;      // one decimal, null when there is nothing to divide by
+  const chg = (a, b) => b ? Math.round(100 * (a - b) / b) : null;      // % change, null when the base is 0
+
+  function digest(D, opts) {
+    const o = Object.assign({ minBrandDeposits12: 10 }, opts), MN = D.mn, Y0 = D.y0;
+    const label = m => MONTHS[m % 12] + " " + (Y0 + Math.floor(m / 12));
+    const rows = D.cube, lag = D.lag;
+    const inR = (m, a, b) => m >= a && m <= b;
+    // sum of counts for kind in months a..b, optional row filter
+    const tot = (kind, a, b, f) => { let n = 0; for (const r of rows) if (r[C.k] === kind && inR(r[C.m], a, b) && (!f || f(r))) n += r[C.n]; return n; };
+
+    const out = { as_of: D.asOf, newest_month: label(MN), newest_month_share_of_month_covered: Math.round(100 * D.lastFrac) / 100 };
+
+    // monthly history, last 24 months (the newest one is part-filled)
+    out.monthly = [];
+    for (let m = Math.max(D.firstM, MN - 23); m <= MN; m++) out.monthly.push({ month: label(m) + (m === MN ? " (part month)" : ""), deposits: tot(0, m, m), visas: tot(1, m, m) });
+
+    // this year so far against the same days last year (the part month is cut to the same days)
+    const ys = Math.floor(MN / 12) * 12;
+    const lateOut = r => !(r[C.m] === MN - 12 && r[C.l]);
+    out.year_to_date = {
+      this_year: { year: Y0 + ys / 12, deposits: tot(0, ys, MN), visas: tot(1, ys, MN) },
+      same_days_last_year: { year: Y0 + ys / 12 - 1, deposits: tot(0, ys - 12, MN - 12, lateOut), visas: tot(1, ys - 12, MN - 12, lateOut) },
+    };
+    out.year_to_date.deposits_change_pct = chg(out.year_to_date.this_year.deposits, out.year_to_date.same_days_last_year.deposits);
+    out.year_to_date.visas_change_pct = chg(out.year_to_date.this_year.visas, out.year_to_date.same_days_last_year.visas);
+
+    // per brand: the last 3 complete months against the 3 before, plus the last 12 months
+    const l3 = [MN - 3, MN - 1], p3 = [MN - 6, MN - 4], l12 = [MN - 11, MN], cm = [MN - 17, MN - MATURE]; // cm: the matured months used for conversion
+    const names = D.brands, tv12 = tot(1, l12[0], l12[1]);
+    const brands = [];
+    names.forEach((name, b) => {
+      const f = r => r[C.b] === b;
+      const dep12 = tot(0, l12[0], l12[1], f), vis12 = tot(1, l12[0], l12[1], f);
+      if (dep12 < o.minBrandDeposits12 && vis12 < o.minBrandDeposits12) return;
+      let n = 0, x = 0, open = 0, openOld = 0;
+      for (const r of rows) if (r[C.k] === 0 && r[C.b] === b) {
+        if (inR(r[C.m], cm[0], cm[1])) { n += r[C.n]; x += r[C.x] * r[C.n]; }
+        if (!r[C.x] && r[C.m] > MN - MATURE) { open += r[C.n]; if (r[C.m] <= MN - 3) openOld += r[C.n]; }
+      }
+      brands.push({
+        brand: name,
+        visas_last_3_months: tot(1, l3[0], l3[1], f), visas_prev_3_months: tot(1, p3[0], p3[1], f),
+        deposits_last_3_months: tot(0, l3[0], l3[1], f), deposits_prev_3_months: tot(0, p3[0], p3[1], f),
+        visas_last_12_months: vis12, deposits_last_12_months: dep12,
+        share_of_all_visas_last_12_months_pct: pct(vis12, tv12),
+        deposit_to_visa_pct_last_12_matured_months: pct(x, n), matured_deposits_in_that_rate: n,
+        open_deposits_no_visa_yet: open, of_which_older_than_3_months: openOld,
+      });
+    });
+    brands.sort((a, b) => b.visas_last_12_months - a.visas_last_12_months || b.deposits_last_12_months - a.deposits_last_12_months);
+    out.brands = brands;
+    out.brand_note = "Months used: last 3 complete = " + label(l3[0]) + " to " + label(l3[1]) + ", previous 3 = " + label(p3[0]) + " to " + label(p3[1]) + ", conversion uses deposits from " + label(cm[0]) + " to " + label(cm[1]) + " (deposits need " + MATURE + " months to be judged).";
+
+    // top universities and cities (named ones only), last 12 months against the 12 before
+    const top = (kind, key, nameOf, skip, n) => {
+      const m = new Map(), prev = new Map();
+      for (const r of rows) if (r[C.k] === kind) {
+        const k = r[C[key]]; if (skip.includes(nameOf[k])) continue;
+        if (inR(r[C.m], l12[0], l12[1])) m.set(k, (m.get(k) || 0) + r[C.n]);
+        else if (inR(r[C.m], MN - 23, MN - 12)) prev.set(k, (prev.get(k) || 0) + r[C.n]);
+      }
+      return [...m].sort((a, b) => b[1] - a[1]).slice(0, n).map(([k, v]) => ({ name: nameOf[k], last_12_months: v, previous_12_months: prev.get(k) || 0 }));
+    };
+    out.top_universities_by_visas = top(1, "i", D.insts, ["Not recorded", "Other / not listed"], 10);
+    out.top_origin_cities_by_deposits = top(0, "c", D.cities, ["Unknown"], 8);
+
+    // visa speed: median days from first deposit to visa, last 12 months against the 12 before
+    const med = a => { if (!a.length) return null; a = a.slice().sort((x, y) => x - y); const h = a.length >> 1; return a.length % 2 ? a[h] : Math.round((a[h - 1] + a[h]) / 2); };
+    out.median_days_deposit_to_visa = {
+      last_12_months: med(lag.filter(l => inR(l[L.m], l12[0], l12[1])).map(l => l[L.days])),
+      previous_12_months: med(lag.filter(l => inR(l[L.m], MN - 23, MN - 12)).map(l => l[L.days])),
+    };
+
+    // whole-business conversion and open pipeline
+    let n = 0, x = 0, open = 0, openOld = 0;
+    for (const r of rows) if (r[C.k] === 0) {
+      if (inR(r[C.m], cm[0], cm[1])) { n += r[C.n]; x += r[C.x] * r[C.n]; }
+      if (!r[C.x] && r[C.m] > MN - MATURE) { open += r[C.n]; if (r[C.m] <= MN - 3) openOld += r[C.n]; }
+    }
+    out.business = { deposit_to_visa_pct_last_12_matured_months: pct(x, n), open_deposits_no_visa_yet: open, of_which_older_than_3_months: openOld, visas_last_12_months: tv12, deposits_last_12_months: tot(0, l12[0], l12[1]) };
+
+    // how complete the data is, so the analysis does not over-read gaps
+    const noUni = tot(1, l12[0], l12[1], r => D.insts[r[C.i]] === "Not recorded");
+    out.data_gaps = { visas_last_12_months_with_no_university_pct: pct(noUni, tv12) };
+    return out;
+  }
+
+  const api = { digest };
+  if (typeof module === "object" && module.exports) module.exports = api;
+  else root.ScorpDigest = api;
+})(typeof self !== "undefined" ? self : this);
+
+</script>
+<script>
 /* Dashboard UI: loading, filters, tabs, metrics and charts. The data model lives in data.js. */
 (function () {
 "use strict";
@@ -715,7 +865,7 @@ const MATURE = 6; // months a deposit needs before its conversion counts
 const OPEN = 6;   // open pipeline = deposits from the last OPEN months with no visa yet
 const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 
-let D = null, MN = 0, Y0 = 2021, sheetId = null, aiSheet = null; // aiSheet: the small sheet the daily AI analysis is written to (link parameter ai=)
+let D = null, MN = 0, Y0 = 2021, sheetId = null, aiSheet = null, reportP = null; // reportP: the detailed AI report, fetched once per load // aiSheet: the small sheet the daily AI analysis is written to (link parameter ai=)
 const fmt = d3.format(",");
 const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
 const pad = n => String(n).padStart(2, "0");
@@ -759,7 +909,7 @@ const VIEWS = [
 ];
 const VIEW = Object.fromEntries(VIEWS.map(v => [v.id, v]));
 
-const state = { r: [0, 0], view: "home", kind: 0, tab: "overview", lg: { dim: "brand", sort: "vis", dir: -1, q: "", all: false } };
+const state = { page: null, r: [0, 0], view: "home", kind: 0, tab: "overview", lg: { dim: "brand", sort: "vis", dir: -1, q: "", all: false } };
 DIMS.forEach(d => state[d.key] = new Set());
 const full = () => state.r[0] === 0 && state.r[1] === MN;
 const on = (k, i) => !state[k].size || state[k].has(i);
@@ -1452,6 +1602,7 @@ function renderTab(skip) {
 function renderAll(skip) {
   if (!D) return;
   readTheme();
+  if (state.page === "ai") { renderAIPage(); return; }
   if (state.view === "home") return;
   periodUI(); filterUI(); chips();
   if (state.view !== "home") { kpis(); if (state.view === "ceo") ceoBlock(); if (state.view === "product") prodBlock(); renderTab(skip); }
@@ -1582,6 +1733,102 @@ function renderAI(rec) {
     `<div class="ai-foot">${warn.length ? `<span class="ai-warn">${esc(warn.join(" "))}</span> ` : ""}Written by AI from this sheet’s counts (no student names). Recommendations to weigh up, not instructions.</div>`;
 }
 
+/* ---------------- AI analysis page (button top right): the detailed report from the "AI Report" tab, with live numbers ---------------- */
+async function fetchReport(id) {
+  try {
+    const r = await fetch(`https://docs.google.com/spreadsheets/d/${aiSheet || id}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent("AI Report")}`);
+    const t = await r.text();
+    if (!r.ok || t.trim().startsWith("<")) return null;
+    const rows = S.parseCSV(t), h = (rows[0] || []).map(x => x.trim().toLowerCase()), v = rows[1] || [], g = k => (v[h.indexOf(k)] || "").trim();
+    if (g("json")) return { updated: g("updated"), dataTo: g("data_to"), status: g("status"), out: JSON.parse(g("json")) };
+    return g("status") ? { status: g("status") } : null;
+  } catch (e) { return null; }
+}
+const chgHTML = (a, b) => b ? `<span class="dl ${a >= b ? "up" : "down"}">${a >= b ? "▲" : "▼"} ${Math.abs(Math.round(100 * (a - b) / b))}%</span>` : a ? '<span class="dl up">new</span>' : "";
+const li = a => a && a.length ? `<ul class="aip-list">${a.map(x => `<li>${esc(x)}</li>`).join("")}</ul>` : '<div class="aip-none">Nothing in the latest report.</div>';
+function trend24(F) {
+  const m = F.monthly, { svg, w } = mk("#aip-trend", 230), H = 230, mg = { l: 40, r: 12, t: 12, b: 26 };
+  const x = d3.scalePoint(m.map((_, i) => i), [mg.l, w - mg.r]), mx = d3.max(m, d => Math.max(d.deposits, d.visas)) || 1, y = d3.scaleLinear([0, mx], [H - mg.b, mg.t]).nice();
+  y.ticks(4).forEach(t => { svg.append("line").attr("x1", mg.l).attr("x2", w - mg.r).attr("y1", y(t)).attr("y2", y(t)).style("stroke", "var(--line)"); svg.append("text").attr("x", mg.l - 6).attr("y", y(t) + 4).attr("text-anchor", "end").style("fill", "var(--ink3)").style("font-size", "10.5px").text(fmt(t)); });
+  m.forEach((d, i) => { if (i % 3 === (m.length - 1) % 3) svg.append("text").attr("x", x(i)).attr("y", H - 8).attr("text-anchor", "middle").style("fill", "var(--ink3)").style("font-size", "10.5px").text(d.month.replace(" (part month)", "").replace(/ 20(\d\d)/, " ’$1")); });
+  [["deposits", "var(--teal)"], ["visas", "var(--gold)"]].forEach(([k, c]) => {
+    const line = d3.line().x((d, i) => x(i)).y(d => y(d[k])).curve(d3.curveMonotoneX);
+    svg.append("path").datum(m.slice(0, -1)).attr("d", line).style("fill", "none").style("stroke", c).attr("stroke-width", 2.2);
+    if (m.length > 1) svg.append("path").datum(m.slice(-2)).attr("d", d3.line().x((d, i) => x(m.length - 2 + i)).y(d => y(d[k]))).style("fill", "none").style("stroke", c).attr("stroke-width", 2.2).attr("stroke-dasharray", "4 4");
+    svg.selectAll(".d" + k).data(m).join("circle").attr("cx", (d, i) => x(i)).attr("cy", d => y(d[k])).attr("r", 2.6).style("fill", c);
+  });
+  svg.selectAll(".hit").data(m).join("rect").attr("x", (d, i) => x(i) - w / m.length / 2).attr("width", w / m.length).attr("y", 0).attr("height", H).style("fill", "transparent")
+    .on("mousemove", (e, d) => showTip(e, `<b>${esc(d.month)}</b><br>${fmt(d.deposits)} deposits<br>${fmt(d.visas)} visas`)).on("mouseleave", hideTip);
+}
+async function renderAIPage() {
+  const body = $("#aip-body"); if (!D) return;
+  if (!reportP) body.innerHTML = '<p class="ai-load">Loading the report…</p>';
+  const rec = await (reportP || (reportP = fetchReport(sheetId)));
+  if (state.page !== "ai") return; // closed while loading
+  const F = ScorpDigest.digest(D), R = rec && rec.out, up = rec && rec.updated ? new Date(rec.updated.replace(" ", "T")) : null;
+  const when = up && !isNaN(up) ? up.toLocaleDateString("en-GB", { day: "numeric", month: "short" }) + ", " + up.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }) : "";
+  const warn = [];
+  if (up && !isNaN(up) && (Date.now() - up) / 36e5 > AI_STALE_H) warn.push(`This report is ${Math.round((Date.now() - up) / 864e5)} days old.`);
+  if (rec && rec.status && rec.status !== "ok" && R) warn.push("The latest refresh failed, so this is the last good report.");
+  const ytd = F.year_to_date, bz = F.business, med = F.median_days_deposit_to_visa;
+  const stat = (l, v, s) => `<div class="aip-stat"><div class="l">${l}</div><div class="v">${v}</div><div class="s">${s}</div></div>`;
+  const verdict = new Map((R ? R.brands : []).map(b => [b.brand, b]));
+  const rows = F.brands.map(b => { const v = verdict.get(b.brand);
+    return `<tr><td><b>${esc(b.brand)}</b></td><td>${v ? `<span class="vt" style="--tc:${AI_TAG[v.verdict] || AI_TAG.Watch}">${esc(v.verdict)}</span>` : ""}</td>
+      <td class="n">${fmt(b.visas_last_3_months)}${chgHTML(b.visas_last_3_months, b.visas_prev_3_months)}</td><td class="n">${fmt(b.deposits_last_3_months)}${chgHTML(b.deposits_last_3_months, b.deposits_prev_3_months)}</td>
+      <td class="n">${b.deposit_to_visa_pct_last_12_matured_months == null ? "—" : Math.round(b.deposit_to_visa_pct_last_12_matured_months) + "%"}</td><td class="n">${fmt(b.open_deposits_no_visa_yet)} <span class="hint">(${fmt(b.of_which_older_than_3_months)} old)</span></td>
+      <td class="n">${b.share_of_all_visas_last_12_months_pct == null ? "—" : b.share_of_all_visas_last_12_months_pct + "%"}</td><td class="why">${v ? esc(v.note) : ""}</td></tr>`; }).join("");
+  const mini = (title, a, what) => `<table class="aip-tbl"><thead><tr><th>${title}</th><th class="n">Last 12 months</th><th class="n">Before that</th><th class="n">Change</th></tr></thead><tbody>${a.map(x => `<tr><td>${esc(x.name)}</td><td class="n">${fmt(x.last_12_months)}</td><td class="n">${fmt(x.previous_12_months)}</td><td class="n">${chgHTML(x.last_12_months, x.previous_12_months) || "—"}</td></tr>`).join("")}</tbody></table>`;
+  const fc = R && R.forecast, A = R ? R.actions : [];
+  body.innerHTML = `
+    <section class="card ai aip-hero">
+      <div class="ai-head"><div class="ai-kick"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l1.9 6.1L20 10l-6.1 1.9L12 18l-1.9-6.1L4 10l6.1-1.9zM19 15l.9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9z"/></svg>AI analysis &amp; business decisions · full report</div>
+        <div class="ai-meta">${esc([when && "Commentary written " + when, rec && rec.dataTo && "data to " + new Date(rec.dataTo + "T00:00:00").toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })].filter(Boolean).join(" · ") || "")}</div></div>
+      ${R ? `<p class="aip-sum">${esc(R.summary)}</p>` : `<p class="ai-empty">${rec && rec.status ? "The latest run did not finish: " + esc(rec.status) : "The detailed report is not available yet. It appears after the next daily run. The numbers below are live."}</p>`}
+      ${warn.length ? `<div class="ai-foot"><span class="ai-warn">${esc(warn.join(" "))}</span></div>` : ""}
+    </section>
+    <div class="aip-stats">
+      ${stat("Deposits this year", fmt(ytd.this_year.deposits), (ytd.deposits_change_pct == null ? "" : `<span class="${ytd.deposits_change_pct >= 0 ? "up" : "down"}">${ytd.deposits_change_pct >= 0 ? "▲" : "▼"} ${Math.abs(ytd.deposits_change_pct)}%</span> vs same days ${ytd.same_days_last_year.year}`))}
+      ${stat("Visas this year", fmt(ytd.this_year.visas), (ytd.visas_change_pct == null ? "" : `<span class="${ytd.visas_change_pct >= 0 ? "up" : "down"}">${ytd.visas_change_pct >= 0 ? "▲" : "▼"} ${Math.abs(ytd.visas_change_pct)}%</span> vs same days ${ytd.same_days_last_year.year}`))}
+      ${stat("Deposit → visa", bz.deposit_to_visa_pct_last_12_matured_months == null ? "—" : Math.round(bz.deposit_to_visa_pct_last_12_matured_months) + "%", "last 12 matured months")}
+      ${stat("Open deposits", fmt(bz.open_deposits_no_visa_yet), fmt(bz.of_which_older_than_3_months) + " older than 3 months")}
+      ${stat("Days to visa", med.last_12_months == null ? "—" : med.last_12_months, "median, last 12 months" + (med.previous_12_months == null ? "" : ` (before: ${med.previous_12_months})`))}
+      ${stat("Visas, last 12 months", fmt(bz.visas_last_12_months), fmt(bz.deposits_last_12_months) + " deposits")}
+    </div>
+    <section class="card aip-sec"><h2>The last 24 months</h2><div class="d">Deposits and visas per month. The newest month is only part-filled (dashed).</div>
+      <div class="legend"><span><i style="background:var(--teal)"></i> Deposits</span> <span><i style="background:var(--gold)"></i> Visas</span></div><div id="aip-trend"></div></section>
+    ${R ? `<section class="card aip-sec"><h2>What changed</h2><div class="d">The movements behind the headline.</div>${li(R.what_changed)}</section>` : ""}
+    <section class="card aip-sec"><h2>Brand scorecard</h2><div class="d">Numbers are live from the sheet: the last 3 complete months against the 3 before. The verdict and the reason come from the latest AI report.</div>
+      <div class="aip-wrap"><table class="aip-tbl"><thead><tr><th>Brand</th><th>Verdict</th><th class="n">Visas, 3 mo</th><th class="n">Deposits, 3 mo</th><th class="n">Deposit → visa</th><th class="n">Open deposits</th><th class="n">Share of visas</th><th>Why</th></tr></thead><tbody>${rows}</tbody></table></div></section>
+    <div class="aip-two">
+      <section class="card aip-sec"><h2>Universities</h2><div class="d">Where students enrol (visas).</div>${R ? li(R.universities) : ""}<div class="aip-wrap" style="margin-top:10px">${mini("University", F.top_universities_by_visas)}</div></section>
+      <section class="card aip-sec"><h2>Where students come from</h2><div class="d">Origin cities (deposits).</div>${R ? li(R.cities) : ""}<div class="aip-wrap" style="margin-top:10px">${mini("City", F.top_origin_cities_by_deposits)}</div></section>
+    </div>
+    ${R ? `<section class="card aip-sec"><h2>Deposits stuck in the pipeline</h2><div class="d">Open deposits, conversion and visa speed.</div>${li(R.pipeline)}</section>
+    <section class="card aip-sec"><h2>Forecast</h2><div class="d">AI estimates from the trends above, not promises.</div><div class="aip-fc"><div><b>Next month</b><p>${esc(fc.next_month)}</p></div><div><b>Next 3 months</b><p>${esc(fc.next_3_months)}</p></div><div><b>Assuming</b><p>${esc(fc.assumptions)}</p></div></div></section>
+    <section class="card aip-sec"><h2>Risks</h2>${li(R.risks)}</section>
+    <section class="card aip-sec"><h2>Action plan</h2><div class="d">Most urgent first within each column.</div><div class="aip-act">${["This week", "This month", "This quarter"].map(w => `<div><h3>${w}</h3>${A.filter(a => a.when === w).map(a => `<div class="a"><b>${esc(a.action)}</b>${a.impact ? `<span>${esc(a.impact)}</span>` : ""}</div>`).join("") || '<div class="aip-none">Nothing here.</div>'}</div>`).join("")}</div></section>` : ""}
+    <div class="ai-foot" style="margin-bottom:30px">Written by AI from this sheet’s counts (no student names). Recommendations to weigh up, not instructions. Tables and numbers are live; the wording is from the last daily run.</div>`;
+  trend24(F);
+}
+function showAIPage(push) {
+  if (!D) return;
+  state.page = "ai";
+  if (push) { const h = new URLSearchParams(location.hash.slice(1)); h.set("page", "ai"); history.pushState(null, "", "#" + h.toString()); }
+  $("#aipage").hidden = false; $("#views").hidden = true; $("#vbody").hidden = true;
+  ["#share", "#export", "#print", "#home", "#aibtn"].forEach(id => $(id).hidden = true); $("#vpill").hidden = true;
+  document.title = "AI analysis · Scorp Outcomes Command Centre"; hideTip(); closeExport(); window.scrollTo(0, 0);
+  renderAIPage();
+}
+function hideAIPage(push) {
+  state.page = null; $("#aipage").hidden = true; $("#aibtn").hidden = false;
+  if (push) { const h = new URLSearchParams(location.hash.slice(1)); h.delete("page"); history.pushState(null, "", "#" + h.toString()); }
+  setView(state.view); // restores the right view and redraws it
+}
+$("#aibtn").onclick = () => showAIPage(true);
+$("#aip-back").onclick = () => hideAIPage(true);
+addEventListener("popstate", () => { if (!D) return; const want = new URLSearchParams(location.hash.slice(1)).get("page") === "ai"; if (want && state.page !== "ai") showAIPage(false); else if (!want && state.page === "ai") hideAIPage(false); });
+
 /* ---------------- loading the sheet ---------------- */
 const gmsg = (t, err) => { const m = $("#gmsg"); m.textContent = t; m.className = "hint" + (err ? " err" : ""); };
 const idOf = u => { const m = u.match(/\/d\/([a-zA-Z0-9-_]+)/); return m ? m[1] : /^[a-zA-Z0-9-_]{25,}$/.test(u) ? u : null; };
@@ -1608,7 +1855,8 @@ async function load(id, view) {
   $("#foot").textContent = `${fmt(D.totals.visa)} visa and ${fmt(D.totals.deposit)} deposit records`;
   $("#gate").hidden = true; $("#dash").hidden = false;
   buildFilterBar(); buildViews(); setView(state.view, true); renderAll();
-  loadAI(id); // not awaited: the dashboard does not wait for it
+  reportP = null; loadAI(id); // not awaited: the dashboard does not wait for it
+  if (state.page === "ai" || new URLSearchParams(location.hash.slice(1)).get("page") === "ai") showAIPage(false);
 }
 async function go(link, view, refreshing) {
   const id = idOf(link);
