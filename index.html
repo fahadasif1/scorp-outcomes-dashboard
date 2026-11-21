@@ -105,7 +105,9 @@ button.busy{pointer-events:none;opacity:.7}
 #p-tree{margin-top:10px}
 #p-tree-n{margin-top:6px}
 .ceo-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:6px}
-.ceo-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr) minmax(0,.9fr);gap:26px;margin-top:10px}
+.ceo-grid{display:grid;gap:26px;margin-top:10px}
+.ceo-grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.ceo-grid.three{grid-template-columns:repeat(3,minmax(0,1fr));margin-top:26px;padding-top:18px;border-top:1px solid var(--line)}
 .ceo-grid h3{font-size:13px;font-weight:600;margin:4px 0 8px;color:var(--ink)}
 .ceo-grid h3 .hint{font-weight:400;font-size:11.5px;margin-left:4px}
 .ceo-grid>div>div+h3{margin-top:18px}
@@ -165,6 +167,29 @@ input[type=month]:focus{border-color:var(--gold)}
   .frow .fdd{position:static}
   .frow .fpanel{left:0;right:0;width:auto}
 }
+
+/* AI analysis card (CEO View) */
+.ai{position:relative;margin-bottom:14px;padding:22px 24px 20px;border:1px solid color-mix(in srgb,var(--gold) 55%,var(--line));
+  background:radial-gradient(900px 220px at 0% 0%,var(--glow1),transparent 70%),radial-gradient(700px 220px at 100% 0%,var(--glow2),transparent 70%),linear-gradient(180deg,var(--panel2),var(--panel));
+  box-shadow:0 0 0 1px color-mix(in srgb,var(--gold) 14%,transparent),0 18px 50px -24px color-mix(in srgb,var(--gold) 45%,transparent)}
+.ai[hidden]{display:none}
+.ai-head{display:flex;justify-content:space-between;align-items:center;gap:10px 18px;flex-wrap:wrap}
+.ai-kick{display:inline-flex;align-items:center;gap:9px;font-family:var(--mono);font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;
+  background:linear-gradient(90deg,var(--gold),#ff7a59);-webkit-background-clip:text;background-clip:text;color:transparent}
+.ai-kick svg{width:16px;height:16px;fill:var(--gold);flex:none}
+.ai-meta{font-size:12px;color:var(--ink3)}
+.ai-headline{font-size:clamp(18px,2vw,24px);font-weight:700;line-height:1.3;letter-spacing:-.01em;margin:12px 0 8px;max-width:980px}
+.ai-outlook{color:var(--ink2);line-height:1.5;margin:0 0 16px;max-width:980px}
+.ai-outlook b{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);margin-right:8px;font-weight:500}
+.ai-dec{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px}
+.ai-d{padding:13px 15px 14px;border:1px solid var(--line);border-left:3px solid var(--tc,var(--ink3));border-radius:12px;background:color-mix(in srgb,var(--tc,var(--ink3)) 7%,var(--panel))}
+.ai-d .tag{display:inline-block;font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;font-weight:600;color:var(--tc);margin-bottom:6px}
+.ai-d .t{font-weight:700;line-height:1.3;margin-bottom:4px}
+.ai-d .w{color:var(--ink2);font-size:13px;line-height:1.45}
+.ai-foot{margin-top:14px;font-size:11.5px;color:var(--ink3)}
+.ai-warn{color:var(--gold)}
+.ai-empty{color:var(--ink2);margin:10px 0 0}
+.ai-load{color:var(--ink3);margin:10px 0 0}
 
 /* KPIs + insights */
 .kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:12px}
@@ -248,7 +273,7 @@ td.rk{font-family:var(--mono);color:var(--ink3);width:28px}
 
 footer{margin-top:26px;color:var(--ink3);font-size:12px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
 
-@media (max-width:1100px){.ceo-grid{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(3,1fr)}.c7,.c6,.c5,.c4,.c3{grid-column:span 12}.insights{grid-template-columns:1fr}.dq{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:1100px){.ceo-grid.two,.ceo-grid.three{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(3,1fr)}.c7,.c6,.c5,.c4,.c3{grid-column:span 12}.insights{grid-template-columns:1fr}.dq{grid-template-columns:repeat(2,1fr)}}
 @media (max-width:560px){.top{position:static}.wrap{padding:0 14px 40px}.acts .lbl-t{display:none}.mark span{display:none}.kpis{grid-template-columns:repeat(2,1fr)}.fpanel{width:min(300px,86vw)}.dq{grid-template-columns:1fr}}
 
 @media print{
@@ -324,6 +349,14 @@ footer{margin-top:26px;color:var(--ink3);font-size:12px;display:flex;justify-con
   </div>
 
   <div id="v-all">
+  <section class="card ai" id="ai" hidden aria-live="polite">
+    <div class="ai-head">
+      <div class="ai-kick"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l1.9 6.1L20 10l-6.1 1.9L12 18l-1.9-6.1L4 10l6.1-1.9zM19 15l.9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9z"/></svg>AI analysis &amp; business decisions</div>
+      <div class="ai-meta" id="ai-meta"></div>
+    </div>
+    <div id="ai-body"></div>
+  </section>
+
   <section class="kpis">
     <div class="kpi" style="--c:var(--gold)"><div class="l">Visas confirmed</div><div class="v" id="k-visa">0</div><div class="s" id="k-visa-s"></div><svg class="spark" id="sp-visa" aria-hidden="true"></svg></div>
     <div class="kpi" style="--c:var(--teal)"><div class="l">Deposits paid</div><div class="v" id="k-dep">0</div><div class="s" id="k-dep-s"></div><svg class="spark" id="sp-dep" aria-hidden="true"></svg></div>
@@ -341,14 +374,14 @@ footer{margin-top:26px;color:var(--ink3);font-size:12px;display:flex;justify-con
         <div class="d">Follows the period and filters above. Click a brand or university to filter, a month or year to zoom to it. Daily, monthly and yearly ignore the period.</div></div>
       <div class="seg ksw" id="ckind" role="group" aria-label="Show deposits or visas"><button type="button" data-k="0">Deposits</button><button type="button" data-k="1">Visas</button></div>
     </div>
-    <div class="ceo-grid">
+    <div class="ceo-grid two">
       <div><h3>By brand</h3><div id="c-brand"></div></div>
       <div><h3>By university</h3><div id="c-inst"></div><div class="hint" id="c-inst-n"></div></div>
-      <div>
-        <h3>Daily <span class="hint">last 14 days</span></h3><div id="c-day"></div>
-        <h3>Monthly <span class="hint">last 12 months</span></h3><div id="c-mon"></div>
-        <h3>Yearly</h3><div id="c-yr"></div>
-      </div>
+    </div>
+    <div class="ceo-grid three">
+      <div><h3>Daily <span class="hint">last 14 days</span></h3><div id="c-day"></div></div>
+      <div><h3>Monthly <span class="hint">last 12 months</span></h3><div id="c-mon"></div></div>
+      <div><h3>Yearly</h3><div id="c-yr"></div></div>
     </div>
   </section>
 
@@ -682,7 +715,7 @@ const MATURE = 6; // months a deposit needs before its conversion counts
 const OPEN = 6;   // open pipeline = deposits from the last OPEN months with no visa yet
 const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 
-let D = null, MN = 0, Y0 = 2021, sheetId = null;
+let D = null, MN = 0, Y0 = 2021, sheetId = null, aiSheet = null; // aiSheet: the small sheet the daily AI analysis is written to (link parameter ai=)
 const fmt = d3.format(",");
 const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
 const pad = n => String(n).padStart(2, "0");
@@ -925,10 +958,12 @@ function kpis() {
   const pc = x => vt ? Math.round(100 * x / vt) + "%" : "0%", I = [];
   const bv = [...by(v, col(C.b))].sort((a, b) => b[1] - a[1]);
   if (bv.length) I.push(`<b>${esc(D.brands[bv[0][0]])}</b> leads with <b>${pc(bv[0][1])}</b> of visas. The top three brands account for <b>${pc(d3.sum(bv.slice(0, 3), x => x[1]))}</b>.`);
-  const bc = [];
-  { const g = new Map(); for (const r of d) if (r[C.m] <= MN - MATURE) { const o = g.get(r[C.b]) || g.set(r[C.b], [0, 0]).get(r[C.b]); o[0] += r[C.n]; o[1] += r[C.x] * r[C.n]; }
-    g.forEach(([n, x], b) => { if (n >= 100) bc.push([b, x / n]); }); bc.sort((a, b) => b[1] - a[1]); }
-  if (bc.length > 1) I.push(`Best conversion: <b>${esc(D.brands[bc[0][0]])}</b> at <b>${pct(bc[0][1])}</b>. Lowest: <b>${esc(D.brands[bc[bc.length - 1][0]])}</b> at <b>${pct(bc[bc.length - 1][1])}</b> (brands with 100+ matured deposits).`);
+  // best / lowest conversion by brand; when the chosen period has too few matured deposits (e.g. this month), use every period instead
+  const brandConv = rows => { const bc = [], g = new Map(); for (const r of rows) if (r[C.m] <= MN - MATURE) { const o = g.get(r[C.b]) || g.set(r[C.b], [0, 0]).get(r[C.b]); o[0] += r[C.n]; o[1] += r[C.x] * r[C.n]; }
+    g.forEach(([n, x], b) => { if (n >= 100) bc.push([b, x / n]); }); return bc.sort((a, b) => b[1] - a[1]); };
+  let bc = brandConv(d), bcNote = "";
+  if (bc.length < 2) { const all = brandConv(sel(0, null, "all")); if (all.length > 1) { bc = all; bcNote = " over all periods"; } }
+  if (bc.length > 1) I.push(`Best conversion${bcNote}: <b>${esc(D.brands[bc[0][0]])}</b> at <b>${pct(bc[0][1])}</b>. Lowest: <b>${esc(D.brands[bc[bc.length - 1][0]])}</b> at <b>${pct(bc[bc.length - 1][1])}</b> (brands with 100+ matured deposits).`);
   else if (cv != null) I.push(`<b>${pct(cv)}</b> of matured deposits in this view turned into a visa.`);
   const iv = [...by(v, col(C.i))].filter(x => !["Not recorded", "Other / not listed"].includes(D.insts[x[0]])).sort((a, b) => b[1] - a[1]);
   const cvv = [...by(v, col(C.c))].filter(x => D.cities[x[0]] !== "Unknown").sort((a, b) => b[1] - a[1]);
@@ -1427,6 +1462,7 @@ function setView(v, quiet) {
   $("#views").hidden = !home; $("#vbody").hidden = home;
   $("#v-all").hidden = !all; $("#v-other").hidden = home || all; $("#ceo").hidden = !ceo; $("#prod").hidden = !prod;
   $("#home").hidden = home;
+  $("#ai").hidden = !ceo; // the AI card belongs to the CEO View only
   // the three insight cards sit under the KPI cards, except in the CEO View where they come after the "at a glance" block
   (ceo ? $("#ceo") : $(".kpis")).after($("#insights"));
   const pill = $("#vpill"); pill.hidden = home; pill.textContent = home ? "" : VIEW[state.view].name;
@@ -1500,12 +1536,51 @@ function applyView(v) {
   state.view = v.view === "home" ? "home" : VIEW[v.view] ? v.view : "ceo"; state.kind = v.ck === 1 ? 1 : 0;
 }
 $("#share").onclick = async () => {
-  const url = location.origin + location.pathname + "#sheet=" + sheetId + "&v=" + b64e(JSON.stringify(saveView()));
+  const url = location.origin + location.pathname + "#sheet=" + sheetId + (aiSheet ? "&ai=" + aiSheet : "") + "&v=" + b64e(JSON.stringify(saveView()));
   const t = $("#share .lbl-t");
   try { await navigator.clipboard.writeText(url); t.textContent = "Link copied ✓"; }
   catch (e) { history.replaceState(null, "", url); t.textContent = "Link is in the address bar"; }
   setTimeout(() => { t.textContent = "Copy view link"; }, 2500);
 };
+
+/* ---------------- AI analysis card (CEO View): written once a day into the sheet's "AI Analysis" tab by the Apps Script ---------------- */
+const AI_TAG = { Back: "var(--good)", Fix: "var(--gold)", Cut: "var(--rose)", Watch: "var(--teal)" };
+const AI_STALE_H = 36; // older than this and the card says so
+async function loadAI(id) {
+  const body = $("#ai-body"); $("#ai-meta").textContent = "";
+  body.innerHTML = '<p class="ai-load">Loading today’s analysis…</p>';
+  let rec = null;
+  try {
+    const r = await fetch(`https://docs.google.com/spreadsheets/d/${aiSheet || id}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent("AI Analysis")}`);
+    const t = await r.text();
+    if (r.ok && !t.trim().startsWith("<")) {
+      const rows = S.parseCSV(t), h = (rows[0] || []).map(x => x.trim().toLowerCase()), v = rows[1] || [], g = k => (v[h.indexOf(k)] || "").trim();
+      if (g("json")) rec = { updated: g("updated"), dataTo: g("data_to"), status: g("status"), out: JSON.parse(g("json")) };
+      else if (g("status")) rec = { status: g("status") };
+    }
+  } catch (e) { rec = null; }
+  if (id !== sheetId) return; // the sheet changed while loading
+  renderAI(rec);
+}
+function renderAI(rec) {
+  const body = $("#ai-body"), meta = $("#ai-meta"), fm = s => new Date(s.replace(" ", "T"));
+  if (!rec || !rec.out) {
+    meta.textContent = "";
+    body.innerHTML = `<p class="ai-empty">${rec && rec.status ? "The latest run did not finish: " + esc(rec.status) : "The daily analysis is not switched on for this sheet yet. It appears here after its first run."}</p>`;
+    return;
+  }
+  const o = rec.out, upd = rec.updated ? fm(rec.updated) : null, age = upd && !isNaN(upd) ? (Date.now() - upd) / 36e5 : null;
+  const when = upd && !isNaN(upd) ? upd.toLocaleDateString("en-GB", { day: "numeric", month: "short" }) + ", " + upd.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }) : "";
+  const dt = rec.dataTo ? new Date(rec.dataTo + "T00:00:00").toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }) : "";
+  meta.innerHTML = esc([when && "Updated " + when, dt && "data to " + dt, "refreshed daily · looks at all periods, not the filters"].filter(Boolean).join(" · "));
+  const warn = [];
+  if (age != null && age > AI_STALE_H) warn.push(`This analysis is ${Math.round(age / 24)} days old.`);
+  if (rec.status && rec.status !== "ok") warn.push("The latest refresh failed, so this is the last good one.");
+  body.innerHTML = `<p class="ai-headline">${esc(o.headline)}</p>` +
+    (o.outlook ? `<p class="ai-outlook"><b>Outlook</b>${esc(o.outlook)}</p>` : "") +
+    `<div class="ai-dec">${o.decisions.map(d => `<div class="ai-d" style="--tc:${AI_TAG[d.tag] || AI_TAG.Watch}"><div class="tag">${esc(d.tag)}</div><div class="t">${esc(d.title)}</div><div class="w">${esc(d.why)}</div></div>`).join("")}</div>` +
+    `<div class="ai-foot">${warn.length ? `<span class="ai-warn">${esc(warn.join(" "))}</span> ` : ""}Written by AI from this sheet’s counts (no student names). Recommendations to weigh up, not instructions.</div>`;
+}
 
 /* ---------------- loading the sheet ---------------- */
 const gmsg = (t, err) => { const m = $("#gmsg"); m.textContent = t; m.className = "hint" + (err ? " err" : ""); };
@@ -1533,6 +1608,7 @@ async function load(id, view) {
   $("#foot").textContent = `${fmt(D.totals.visa)} visa and ${fmt(D.totals.deposit)} deposit records`;
   $("#gate").hidden = true; $("#dash").hidden = false;
   buildFilterBar(); buildViews(); setView(state.view, true); renderAll();
+  loadAI(id); // not awaited: the dashboard does not wait for it
 }
 async function go(link, view, refreshing) {
   const id = idOf(link);
@@ -1573,6 +1649,7 @@ $("#chg").onclick = () => { $("#dash").hidden = true; $("#gate").hidden = false;
 try { $("#glink").value = localStorage.getItem("scorp-sheet-link") || ""; } catch (e) { /* private mode */ }
 {
   const h = new URLSearchParams(location.hash.slice(1)), sid = h.get("sheet");
+  aiSheet = /^[a-zA-Z0-9_-]{25,}$/.test(h.get("ai") || "") ? h.get("ai") : null;
   if (sid) {
     let view = null; try { view = h.get("v") ? JSON.parse(b64d(h.get("v"))) : null; } catch (e) { view = null; }
     $("#glink").value = "https://docs.google.com/spreadsheets/d/" + sid + "/edit";
