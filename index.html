@@ -396,14 +396,6 @@ footer{margin-top:26px;color:var(--ink3);font-size:12px;display:flex;justify-con
   </div>
 
   <div id="v-all">
-  <section class="card ai" id="ai" hidden aria-live="polite">
-    <div class="ai-head">
-      <div class="ai-kick"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l1.9 6.1L20 10l-6.1 1.9L12 18l-1.9-6.1L4 10l6.1-1.9zM19 15l.9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9z"/></svg>AI analysis &amp; business decisions</div>
-      <div class="ai-meta" id="ai-meta"></div>
-    </div>
-    <div id="ai-body"></div>
-  </section>
-
   <section class="kpis">
     <div class="kpi" style="--c:var(--gold)"><div class="l">Visas confirmed</div><div class="v" id="k-visa">0</div><div class="s" id="k-visa-s"></div><svg class="spark" id="sp-visa" aria-hidden="true"></svg></div>
     <div class="kpi" style="--c:var(--teal)"><div class="l">Deposits paid</div><div class="v" id="k-dep">0</div><div class="s" id="k-dep-s"></div><svg class="spark" id="sp-dep" aria-hidden="true"></svg></div>
@@ -1613,7 +1605,6 @@ function setView(v, quiet) {
   $("#views").hidden = !home; $("#vbody").hidden = home;
   $("#v-all").hidden = !all; $("#v-other").hidden = home || all; $("#ceo").hidden = !ceo; $("#prod").hidden = !prod;
   $("#home").hidden = home;
-  $("#ai").hidden = !ceo; // the AI card belongs to the CEO View only
   // the three insight cards sit under the KPI cards, except in the CEO View where they come after the "at a glance" block
   (ceo ? $("#ceo") : $(".kpis")).after($("#insights"));
   const pill = $("#vpill"); pill.hidden = home; pill.textContent = home ? "" : VIEW[state.view].name;
@@ -1694,44 +1685,9 @@ $("#share").onclick = async () => {
   setTimeout(() => { t.textContent = "Copy view link"; }, 2500);
 };
 
-/* ---------------- AI analysis card (CEO View): written once a day into the sheet's "AI Analysis" tab by the Apps Script ---------------- */
+/* ---------------- AI analysis: shared bits (the report page below reads the sheet's "AI Report" tab, written once a day by the Apps Script) ---------------- */
 const AI_TAG = { Back: "var(--good)", Fix: "var(--gold)", Cut: "var(--rose)", Watch: "var(--teal)" };
 const AI_STALE_H = 36; // older than this and the card says so
-async function loadAI(id) {
-  const body = $("#ai-body"); $("#ai-meta").textContent = "";
-  body.innerHTML = '<p class="ai-load">Loading today’s analysis…</p>';
-  let rec = null;
-  try {
-    const r = await fetch(`https://docs.google.com/spreadsheets/d/${aiSheet || id}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent("AI Analysis")}`);
-    const t = await r.text();
-    if (r.ok && !t.trim().startsWith("<")) {
-      const rows = S.parseCSV(t), h = (rows[0] || []).map(x => x.trim().toLowerCase()), v = rows[1] || [], g = k => (v[h.indexOf(k)] || "").trim();
-      if (g("json")) rec = { updated: g("updated"), dataTo: g("data_to"), status: g("status"), out: JSON.parse(g("json")) };
-      else if (g("status")) rec = { status: g("status") };
-    }
-  } catch (e) { rec = null; }
-  if (id !== sheetId) return; // the sheet changed while loading
-  renderAI(rec);
-}
-function renderAI(rec) {
-  const body = $("#ai-body"), meta = $("#ai-meta"), fm = s => new Date(s.replace(" ", "T"));
-  if (!rec || !rec.out) {
-    meta.textContent = "";
-    body.innerHTML = `<p class="ai-empty">${rec && rec.status ? "The latest run did not finish: " + esc(rec.status) : "The daily analysis is not switched on for this sheet yet. It appears here after its first run."}</p>`;
-    return;
-  }
-  const o = rec.out, upd = rec.updated ? fm(rec.updated) : null, age = upd && !isNaN(upd) ? (Date.now() - upd) / 36e5 : null;
-  const when = upd && !isNaN(upd) ? upd.toLocaleDateString("en-GB", { day: "numeric", month: "short" }) + ", " + upd.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }) : "";
-  const dt = rec.dataTo ? new Date(rec.dataTo + "T00:00:00").toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }) : "";
-  meta.innerHTML = esc([when && "Updated " + when, dt && "data to " + dt, "refreshed daily · looks at all periods, not the filters"].filter(Boolean).join(" · "));
-  const warn = [];
-  if (age != null && age > AI_STALE_H) warn.push(`This analysis is ${Math.round(age / 24)} days old.`);
-  if (rec.status && rec.status !== "ok") warn.push("The latest refresh failed, so this is the last good one.");
-  body.innerHTML = `<p class="ai-headline">${esc(o.headline)}</p>` +
-    (o.outlook ? `<p class="ai-outlook"><b>Outlook</b>${esc(o.outlook)}</p>` : "") +
-    `<div class="ai-dec">${o.decisions.map(d => `<div class="ai-d" style="--tc:${AI_TAG[d.tag] || AI_TAG.Watch}"><div class="tag">${esc(d.tag)}</div><div class="t">${esc(d.title)}</div><div class="w">${esc(d.why)}</div></div>`).join("")}</div>` +
-    `<div class="ai-foot">${warn.length ? `<span class="ai-warn">${esc(warn.join(" "))}</span> ` : ""}Written by AI from this sheet’s counts (no student names). Recommendations to weigh up, not instructions.</div>`;
-}
 
 /* ---------------- AI analysis page (button top right): the detailed report from the "AI Report" tab, with live numbers ---------------- */
 async function fetchReport(id) {
@@ -1855,7 +1811,7 @@ async function load(id, view) {
   $("#foot").textContent = `${fmt(D.totals.visa)} visa and ${fmt(D.totals.deposit)} deposit records`;
   $("#gate").hidden = true; $("#dash").hidden = false;
   buildFilterBar(); buildViews(); setView(state.view, true); renderAll();
-  reportP = null; loadAI(id); // not awaited: the dashboard does not wait for it
+  reportP = null; // the AI report is fetched when the AI analysis page opens
   if (state.page === "ai" || new URLSearchParams(location.hash.slice(1)).get("page") === "ai") showAIPage(false);
 }
 async function go(link, view, refreshing) {
