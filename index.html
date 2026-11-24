@@ -111,6 +111,27 @@ button.busy{pointer-events:none;opacity:.7}
 .ceo-grid h3{font-size:13px;font-weight:600;margin:4px 0 8px;color:var(--ink)}
 .ceo-grid h3 .hint{font-weight:400;font-size:11.5px;margin-left:4px}
 .ceo-grid>div>div+h3{margin-top:18px}
+/* finance view */
+.fval{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink2);white-space:nowrap}
+.fval input{width:130px;font:inherit;font-size:14px;color:var(--ink);background:var(--field);border:1px solid var(--line2);border-radius:999px;padding:7px 12px;outline:none}
+.fval select{font:inherit;font-size:13px;color:var(--ink);background:var(--field);border:1px solid var(--line2);border-radius:999px;padding:6px 8px;outline:none}
+.fval input:focus,.fval select:focus{border-color:var(--gold)}
+.fin-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:8px 0 4px}
+.fcard{border:1px solid var(--line);border-radius:14px;padding:14px 16px;background:var(--hover)}
+.fcard .l{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3)}
+.fcard .v{font-size:24px;font-weight:800;margin-top:6px;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.fcard .s{color:var(--ink3);font-size:12px;margin-top:2px;line-height:1.35}
+.fin-hint{color:var(--ink3);font-size:12.5px;margin:6px 0 2px;padding:10px 14px;border:1px dashed var(--line2);border-radius:12px}
+.fin-row{margin-top:26px;padding-top:18px;border-top:1px solid var(--line)}
+.fin-scroll{max-height:440px;overflow:auto}
+.fin-scroll thead th{position:sticky;top:0;background:var(--panel2);z-index:1}
+table.ft th:first-child{text-align:left}
+table.ft th:nth-child(2){text-align:right}
+table.ft tfoot td{font-weight:700;color:var(--ink);border-top:1px solid var(--line2);border-bottom:0}
+.fmore{margin-top:10px}
+@media (max-width:1100px){.fin-cards{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:560px){.fin-cards{grid-template-columns:1fr}.fval{white-space:normal;flex-wrap:wrap}}
+@media print{.fin-scroll{max-height:none;overflow:visible}.fmore{display:none}}
 
 /* export panel */
 .xpanel{position:absolute;right:0;top:calc(100% + 6px);z-index:40;width:260px;padding:14px 16px;border:1px solid var(--line2);border-radius:14px;background:var(--panel2);box-shadow:0 10px 30px rgba(0,0,0,.35)}
@@ -150,6 +171,8 @@ input[type=month]:focus{border-color:var(--gold)}
 .fopt.on{color:var(--ink)}
 .fopt .t{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .fopt .n{font-family:var(--mono);font-size:11.5px;color:var(--ink3)}
+.fopt.zero{opacity:.45}
+.fleg{font-size:11px;color:var(--ink3);text-align:right;padding:0 6px 4px;font-family:var(--mono)}
 .fpanel .none{padding:10px 6px;color:var(--ink3);font-size:13px}
 .fpanel .fhint{font-size:11.5px;color:var(--ink3);margin:-2px 2px 8px}
 .fclear{margin-top:8px;font-size:12px;padding:5px 10px}
@@ -365,6 +388,7 @@ footer{margin-top:26px;color:var(--ink3);font-size:12px;display:flex;justify-con
       <label class="xrow"><input type="checkbox" id="x-dep" checked> Deposits</label>
       <label class="xrow"><input type="checkbox" id="x-vis" checked> Visas</label>
       <div class="hint">Untick one to export only the other. Follows the period and filters.</div>
+      <div class="hint" id="x-note" hidden></div>
       <button class="primary" type="button" id="x-go">Download CSV</button>
     </div>
   </header>
@@ -434,6 +458,29 @@ footer{margin-top:26px;color:var(--ink3);font-size:12px;display:flex;justify-con
     <div class="hint" id="p-tree-n"></div>
   </section>
 
+  <section class="card ceo" id="fin" hidden>
+    <div class="ceo-head">
+      <div><h2>Finance</h2>
+        <div class="d">Follows the period and filters above. Enter what one deposit is worth to see revenue; leave it empty for counts only. Click a row to filter.</div></div>
+      <label class="fval">Value per deposit
+        <select id="f-cur" aria-label="Currency"><option>£</option><option>$</option><option>€</option><option>Rs</option></select>
+        <input id="f-val" type="number" min="0" step="any" inputmode="decimal" placeholder="e.g. 2000" aria-label="Value per deposit">
+      </label>
+    </div>
+    <div id="f-cards"></div>
+    <div class="ceo-grid">
+      <div><h3>Month by month <span class="hint">against the same month last year</span></h3><div class="tablewrap fin-scroll" id="f-month"></div></div>
+    </div>
+    <div class="ceo-grid two fin-row">
+      <div><h3>Partner offices <span class="hint">for partner commission</span></h3><div class="tablewrap fin-scroll" id="f-office"></div></div>
+      <div><h3>Deposits with no visa after 6 months <span class="hint">likely refunds or lost students</span></h3><div class="tablewrap fin-scroll" id="f-risk"></div></div>
+    </div>
+    <div class="ceo-grid two fin-row">
+      <div><h3>Deposit sources</h3><div class="tablewrap" id="f-src"></div></div>
+      <div><h3>Visas by university and intake <span class="hint">for university invoicing</span></h3><div class="tablewrap fin-scroll" id="f-uni"></div></div>
+    </div>
+  </section>
+
   <nav class="tabs" role="tablist" aria-label="Dashboard sections">
     <button role="tab" data-tab="overview" aria-selected="true">Overview</button>
     <button role="tab" data-tab="performance" aria-selected="false">Performance</button>
@@ -499,8 +546,8 @@ footer{margin-top:26px;color:var(--ink3);font-size:12px;display:flex;justify-con
   <section class="tabpanel grid" data-panel="pipeline" role="tabpanel" hidden>
     <div class="card c12">
       <h2>Intakes</h2>
-      <div class="d">Deposits paid for each intake and the visas that followed them. Intake comes from the deposit month (Nov–Feb Jan, Mar–Jun May, Jul–Oct Sep). Ignores the period filter. Click an intake to filter.</div>
-      <div class="legend"><span><i style="background:var(--teal)"></i>Deposits</span><span><i style="background:var(--gold)"></i>Visas from those deposits</span></div>
+      <div class="d">Deposits and visas for each intake. A visa (and the deposit that led to it) counts in the intake of the visa month (Nov–Feb Jan, Mar–Jun May, Jul–Oct Sep); a deposit with no visa yet counts in its expected intake (paid Sep–Dec Jan, Jan–Apr May, May–Aug Sep). The % is the share of the intake's deposits that became a visa. Ignores the period filter. Click an intake to filter.</div>
+      <div class="legend"><span><i style="background:var(--teal)"></i>Deposits</span><span><i style="background:var(--gold)"></i>Visas</span></div>
       <div id="intakes"></div>
     </div>
     <div class="card c6">
@@ -546,7 +593,7 @@ footer{margin-top:26px;color:var(--ink3);font-size:12px;display:flex;justify-con
 
 </script>
 <script>
-window.SCORP_RULES = {"brand":{"Student4uk":"Students4uk","Edmine":"EdMine","Worldwide Study Advisers (WSA)":"Worldwide Study Advisers"},"city":{"Lahore CG":"Lahore","Lahore JT":"Lahore","Bhawalpur":"Bahawalpur","Sawat":"Swat","Bhawalnagar":"Bahawalnagar","":"Unknown"},"inst":[["bpp","BPP University"],["west of scotland","Univ. of the West of Scotland"],["canterbury","Canterbury Christ Church"],["huddersfield","Univ. of Huddersfield"],["university of law","University of Law"],["chester","Univ. of Chester"],["london south bank","London South Bank"],["ulster","Ulster University"],["qa higher","Ulster University"],["coventry","Coventry University"],["birmingham city","Birmingham City Univ."],["liverpool john","Liverpool John Moores"],["lincoln univ","Lincoln"],["university of lincoln","Lincoln"],["de montfort","De Montfort University"],["keele","Keele University"],["bedfordshire","Univ. of Bedfordshire"],["gloucestershire","Univ. of Gloucestershire"],["middlesex","Middlesex University"],["bloomsbury","Bloomsbury Institute"],["oxford international","Oxford Intl. Education Group"],["oieg","Oxford Intl. Education Group"],["stirling","Univ. of Stirling"],["beykoz","Beykoz (Turkey)"],["bradford","Univ. of Bradford"],["london metropolitan","London Metropolitan"],["south wales","Univ. of South Wales"],["sunderland","Univ. of Sunderland"],["sundarland","Univ. of Sunderland"],["okan","Istanbul Okan (Turkey)"],["salford","Univ. of Salford"],["graduex","Graduex"],["hull","Univ. of Hull"],["abertay","Abertay University"],["bangor","Bangor University"],["glasgow caledonian","Glasgow Caledonian"],["west of england","UWE Bristol"],["manchester metropolitan","Manchester Met"],["heriot","Heriot-Watt"],["heroit","Heriot-Watt"],["regent","Regent College London"],["topkapi","Topkapi (Turkey)"],["gelisim","Istanbul Gelisim (Turkey)"],["teesside","Teesside University"],["greater manchester","Univ. of Greater Manchester"],["nottingham trent","Nottingham Trent"],["greenwich","Univ. of Greenwich"],["essex","Univ. of Essex"],["derby","Univ. of Derby"],["leeds beckett","Leeds Beckett"],["ravensbourne","Oxford Intl. Education Group"],["ibcm","Intl. Business College Manchester"],["international business college","Intl. Business College Manchester"],["arden","Arden University"],["schiller","Schiller Intl. (Europe)"],["uskudar","Uskudar (Turkey)"],["anglia ruskin","Anglia Ruskin"],["wolverhampton","Univ. of Wolverhampton"],["east london","Univ. of East London"],["napier","Edinburgh Napier"],["university of kent","Univ. of Kent"],["bolton","Univ. of Bolton"],["kingston","Kingston University"],["westminster","Univ. of Westminster"],["kadir has","Kadir Has (Turkey)"],["budapest","Budapest Metropolitan (Europe)"],["study group","Study Group"],["oncampus","Cambridge Education Group"],["cambridge education","Cambridge Education Group"],["malvern","Malvern International"],["shorelight","Shorelight"]],"uk":["Bedford","Birmingham","Bolton","Burnley","Leeds","Liverpool","London","Manchester","Preston","Sheffield"],"geo":{"Faisalabad":[73.08,31.42],"Lahore":[74.35,31.55],"Islamabad":[73.05,33.68],"Rawalpindi":[73.02,33.6],"Gojra":[72.69,31.15],"Haripur":[72.93,33.99],"Multan":[71.52,30.2],"Bahawalpur":[71.68,29.4],"Gujrat":[74.08,32.57],"Sargodha":[72.67,32.08],"Gujranwala":[74.19,32.16],"Peshawar":[71.58,34.01],"Jhelum":[73.73,32.93],"Karachi":[67.0,24.86],"Toba Tek Singh":[72.48,30.97],"Abbottabad":[73.22,34.15],"Makhdum Pur":[73.45,31.05],"Chiniot":[72.98,31.72],"Kotli":[73.9,33.52],"Sahiwal":[73.11,30.67],"Narowal":[74.87,32.1],"Pir Mahal":[72.43,30.77],"Sialkot":[74.52,32.49],"Chakwal":[72.86,32.93],"Kamalia":[72.65,30.73],"Murree":[73.39,33.91],"Mardan":[72.04,34.2],"Swat":[72.43,34.77],"Muzaffarabad":[73.47,34.37],"Khanewal":[71.93,30.3],"Kasur":[74.45,31.12],"Samundri":[72.96,31.07],"Burewala":[72.65,30.16],"Dijkot":[73.0,31.22],"Rahim Yar Khan":[70.3,28.42],"Sheikhupura":[74.0,31.71],"Wah Cantt":[72.75,33.77],"Mirpur":[73.75,33.15],"Jhang":[72.32,31.27],"Liaquatpur":[70.95,28.93],"Kharian":[73.87,32.81],"Bahawalnagar":[73.25,29.99],"Attock":[72.36,33.77],"Mandi Bhauddin":[73.49,32.58],"Chistian":[72.87,29.8],"Jaranwala":[73.42,31.33],"Parachinar":[70.1,33.9],"Wazirabad":[74.12,32.44],"Kamoki":[74.22,31.98],"Yazman":[71.74,29.12],"Vehari":[72.35,30.04],"Kohat":[71.44,33.59],"Chichawatni":[72.69,30.53],"Tandlianwala":[73.13,31.04]},"india":["Kerala","Kondotty","Aurangabad","Nagpur","Pune","Mumbai","Hyderabad"],"gulf":["Jeddah","Abu Dhabi","Dubai"],"segs":["Team 1","Team 2","No team","Direct","Indirect","Agent","Referral","Unknown"]};
+window.SCORP_RULES = {"brand":{"Student4uk":"Students4uk","Edmine":"EdMine","Worldwide Study Advisers (WSA)":"Worldwide Study Advisers"},"city":{"Lahore CG":"Lahore","Lahore JT":"Lahore","Bhawalpur":"Bahawalpur","Sawat":"Swat","Bhawalnagar":"Bahawalnagar","":"Unknown"},"inst":[["bpp","BPP University"],["west of scotland","Univ. of the West of Scotland"],["canterbury","Canterbury Christ Church"],["huddersfield","Univ. of Huddersfield"],["university of law","University of Law"],["chester","Univ. of Chester"],["london south bank","London South Bank"],["ulster","Ulster University"],["qa higher","Ulster University"],["coventry","Coventry University"],["birmingham city","Birmingham City Univ."],["liverpool john","Liverpool John Moores"],["lincoln univ","Lincoln"],["university of lincoln","Lincoln"],["de montfort","De Montfort University"],["keele","Keele University"],["bedfordshire","Univ. of Bedfordshire"],["gloucestershire","Univ. of Gloucestershire"],["middlesex","Middlesex University"],["bloomsbury","Bloomsbury Institute"],["stirling","Univ. of Stirling"],["beykoz","Beykoz (Turkey)"],["bradford","Univ. of Bradford"],["london metropolitan","London Metropolitan"],["south wales","Univ. of South Wales"],["sunderland","Univ. of Sunderland"],["sundarland","Univ. of Sunderland"],["okan","Istanbul Okan (Turkey)"],["salford","Univ. of Salford"],["graduex","Graduex"],["hull","Univ. of Hull"],["abertay","Abertay University"],["bangor","Bangor University"],["glasgow caledonian","Glasgow Caledonian"],["west of england","UWE Bristol"],["manchester metropolitan","Manchester Met"],["heriot","Heriot-Watt"],["heroit","Heriot-Watt"],["regent","Regent College London"],["topkapi","Topkapi (Turkey)"],["gelisim","Istanbul Gelisim (Turkey)"],["teesside","Teesside University"],["greater manchester","Univ. of Greater Manchester"],["nottingham trent","Nottingham Trent"],["greenwich","Univ. of Greenwich"],["essex","Univ. of Essex"],["derby","Univ. of Derby"],["leeds beckett","Leeds Beckett"],["ravensbourne","Oxford Intl. Education Group"],["ibcm","Intl. Business College Manchester"],["international business college","Intl. Business College Manchester"],["arden","Arden University"],["schiller","Schiller Intl. (Europe)"],["uskudar","Uskudar (Turkey)"],["anglia ruskin","Anglia Ruskin"],["wolverhampton","Univ. of Wolverhampton"],["east london","Univ. of East London"],["napier","Edinburgh Napier"],["university of kent","Univ. of Kent"],["bolton","Univ. of Bolton"],["kingston","Kingston University"],["westminster","Univ. of Westminster"],["kadir has","Kadir Has (Turkey)"],["budapest","Budapest Metropolitan (Europe)"],["malvern","Malvern International"],["oxford international","Oxford Intl. Education Group"],["oieg","Oxford Intl. Education Group"],["study group","Study Group"],["oncampus","Cambridge Education Group"],["cambridge education","Cambridge Education Group"],["shorelight","Shorelight"]],"uk":["Bedford","Birmingham","Bolton","Burnley","Leeds","Liverpool","London","Manchester","Preston","Sheffield"],"geo":{"Faisalabad":[73.08,31.42],"Lahore":[74.35,31.55],"Islamabad":[73.05,33.68],"Rawalpindi":[73.02,33.6],"Gojra":[72.69,31.15],"Haripur":[72.93,33.99],"Multan":[71.52,30.2],"Bahawalpur":[71.68,29.4],"Gujrat":[74.08,32.57],"Sargodha":[72.67,32.08],"Gujranwala":[74.19,32.16],"Peshawar":[71.58,34.01],"Jhelum":[73.73,32.93],"Karachi":[67.0,24.86],"Toba Tek Singh":[72.48,30.97],"Abbottabad":[73.22,34.15],"Makhdum Pur":[73.45,31.05],"Chiniot":[72.98,31.72],"Kotli":[73.9,33.52],"Sahiwal":[73.11,30.67],"Narowal":[74.87,32.1],"Pir Mahal":[72.43,30.77],"Sialkot":[74.52,32.49],"Chakwal":[72.86,32.93],"Kamalia":[72.65,30.73],"Murree":[73.39,33.91],"Mardan":[72.04,34.2],"Swat":[72.43,34.77],"Muzaffarabad":[73.47,34.37],"Khanewal":[71.93,30.3],"Kasur":[74.45,31.12],"Samundri":[72.96,31.07],"Burewala":[72.65,30.16],"Dijkot":[73.0,31.22],"Rahim Yar Khan":[70.3,28.42],"Sheikhupura":[74.0,31.71],"Wah Cantt":[72.75,33.77],"Mirpur":[73.75,33.15],"Jhang":[72.32,31.27],"Liaquatpur":[70.95,28.93],"Kharian":[73.87,32.81],"Bahawalnagar":[73.25,29.99],"Attock":[72.36,33.77],"Mandi Bhauddin":[73.49,32.58],"Chistian":[72.87,29.8],"Jaranwala":[73.42,31.33],"Parachinar":[70.1,33.9],"Wazirabad":[74.12,32.44],"Kamoki":[74.22,31.98],"Yazman":[71.74,29.12],"Vehari":[72.35,30.04],"Kohat":[71.44,33.59],"Chichawatni":[72.69,30.53],"Tandlianwala":[73.13,31.04]},"india":["Kerala","Kondotty","Aurangabad","Nagpur","Pune","Mumbai","Hyderabad"],"gulf":["Jeddah","Abu Dhabi","Dubai"],"segs":["Team 1","Team 2","No team","Direct","Indirect","Agent","Referral","Unknown"]};
 </script>
 <script>
 /* Data engine: turns the two sheet tabs into a compact, name-free cube.
@@ -558,17 +605,24 @@ window.SCORP_RULES = {"brand":{"Student4uk":"Students4uk","Edmine":"EdMine","Wor
   const NO_MATCH = "No matched deposit";
   const REGIONS = ["Pakistan", "UK offices", "India", "Gulf", "Other"];
   const MATCH_WINDOW = 400; // max days from deposit to visa for the two to count as one student journey
+  const LATE_DAYS = 30;     // a deposit form filled in up to this many days after the visa form still belongs to that visa
+  const MIN_VARIANT = 8;    // names shorter than this (letters only) link only when spelt exactly the same
   const DUP_WINDOW = 14;    // a second deposit for the same student and brand within this many days is a likely duplicate
   const DUP_VISA_WINDOW = 30; // a second visa for the same student and brand within this many days is a likely duplicate
   const DAY = 864e5;
   const RECENT_DAYS = 60;   // `recent` keeps day-level rows for this many days up to the newest record (for the daily chart)
 
-  // cube row: [month, brand, city, university, kind (0 deposit, 1 visa), segment, destination, intake, office, matched, late, count]
+  // cube row: [month, brand, city, university, kind (0 deposit, 1 visa), segment, destination, intake, office, matched, late, other segment, count]
   // matched = deposit later got a visa / visa has an earlier deposit
   // late = the row falls later in its month than the newest record's day of month (so a part month can be compared with the same days a year earlier)
-  const C = { m: 0, b: 1, c: 2, i: 3, k: 4, s: 5, d: 6, t: 7, p: 8, x: 9, l: 10, n: 11 };
-  // lag row: [visa month, brand, city, days, university, destination, intake, team, office]
-  const L = { m: 0, b: 1, c: 2, days: 3, i: 4, d: 5, t: 6, s: 7, p: 8 };
+  // segment = deposit source on a deposit, admission team on a visa.
+  // other segment = the other one, through the deposit-visa link: a deposit carries the team of the visa it became
+  // (NO_VISA_YET if none), a visa the source of its deposit (NO_DEPOSIT if unmatched). Lets the Team filter reach
+  // deposits and the Deposit source filter reach visas where asked (the CSV export).
+  const C = { m: 0, b: 1, c: 2, i: 3, k: 4, s: 5, d: 6, t: 7, p: 8, x: 9, l: 10, v: 11, n: 12 };
+  const NO_VISA_YET = "No visa yet", NO_DEPOSIT = "No deposit found";
+  // lag row: [visa month, brand, city, days, university, destination, intake, team, office, deposit source]
+  const L = { m: 0, b: 1, c: 2, days: 3, i: 4, d: 5, t: 6, s: 7, p: 8, o: 9 };
 
   function parseCSV(t) {
     const rows = []; let row = [], f = "", q = false;
@@ -599,28 +653,72 @@ window.SCORP_RULES = {"brand":{"Student4uk":"Students4uk","Edmine":"EdMine","Wor
     return { rows, bad };
   }
 
-  // intake comes from the DEPOSIT month: Nov-Feb -> Jan, Mar-Jun -> May, Jul-Oct -> Sep
+  // Intake is not in the sheet. A visa is granted shortly before the course starts, so the VISA month
+  // gives it: Nov-Feb -> Jan, Mar-Jun -> May, Jul-Oct -> Sep. A deposit that became a visa takes that
+  // visa's intake. A deposit with no visa yet is expected about two months later (the median gap), so
+  // Sep-Dec -> Jan, Jan-Apr -> May, May-Aug -> Sep. Checked on the Nov 2026 sheet: the deposit-month rule
+  // agrees with the real visa intake for 79% of students (the older rule, the visa buckets applied to the
+  // deposit month, agreed for 55%).
   function intakeKey(y, m) {
     if (m >= 11) return (y + 1) * 10 + 1;
     if (m <= 2) return y * 10 + 1;
     if (m <= 6) return y * 10 + 2;
     return y * 10 + 3;
   }
+  function depIntakeKey(y, m) {
+    if (m >= 9) return (y + 1) * 10 + 1;
+    if (m <= 4) return y * 10 + 2;
+    return y * 10 + 3;
+  }
   const intakeName = k => ["", "Jan", "May", "Sep"][k % 10] + " " + Math.floor(k / 10);
+
+  // name -> [letters only, positions where each word starts]; the letters are the same as in the matching key
+  function nameParts(s) {
+    let L = ""; const starts = [];
+    for (const w of (s || "").toLowerCase().replace(/[^a-z ]/g, " ").split(" ")) if (w) { starts.push(L.length); L += w; }
+    return [L, starts];
+  }
+  // true when a and b differ by exactly one letter (changed, added, dropped, or two neighbours swapped) and that
+  // letter is not the first letter of a word: Umar/Umer, Ahmad/Ahmed, Bhatii/Bhatti link; Arshad/Irshad, Hassan/Hussain do not
+  function oneEdit(a, b, sa, sb) {
+    if (a === b || Math.abs(a.length - b.length) > 1) return false;
+    let i = 0; const n = Math.min(a.length, b.length);
+    while (i < n && a[i] === b[i]) i++;
+    if (sa.includes(i) || sb.includes(i)) return false;
+    if (a.length === b.length) {
+      if (a.slice(i + 1) === b.slice(i + 1)) return true;
+      return i + 1 < a.length && !sa.includes(i + 1) && !sb.includes(i + 1) && a[i] === b[i + 1] && a[i + 1] === b[i] && a.slice(i + 2) === b.slice(i + 2);
+    }
+    return a.length > b.length ? a.slice(i + 1) === b.slice(i) : a.slice(i) === b.slice(i + 1);
+  }
+  // a form sent twice: the same day and every field the same apart from the time, submission ID and confirmation number
+  const OWN_FIELDS = new Set(["submission date", "submission id", "deposit number", "visa confirmation number"]);
+  function dedupe(rows) {
+    const seen = new Set(), out = [];
+    for (const r of rows) {
+      const k = r["submission date"].slice(0, 10) + "|" + Object.keys(r).filter(f => !OWN_FIELDS.has(f) && f[0] !== "$").sort().map(f => f + "=" + String(r[f]).toLowerCase()).join("|");
+      if (!seen.has(k)) { seen.add(k); out.push(r); }
+    }
+    return out;
+  }
 
   function topCounts(map, n) { return [...map].sort((a, b) => b[1] - a[1]).slice(0, n); }
   function bump(map, k, by) { map.set(k, (map.get(k) || 0) + (by || 1)); }
 
   function buildData(visaTab, depTab, R) {
-    const visa = visaTab.rows, dep = depTab.rows, all = visa.concat(dep);
+    const visa = dedupe(visaTab.rows), dep = dedupe(depTab.rows), all = visa.concat(dep);
 
     const brandOf = r => R.brand[r.project] || r.project || "Unknown";
     const cityOf = r => (r.location in R.city ? R.city[r.location] : r.location) || "Unknown";
+    // University keywords must start a word ("chester" is not in "Manchester"), after spaces are collapsed
+    // ("Greater  Manchester"). First match wins, so pathway providers (OIEG, Study Group...) sit last in rules.json
+    // and the university named in the row wins ("Edinburgh Napier University International College OIEG").
+    const instRules = R.inst.map(([k, v]) => [new RegExp("(^|[^a-z])" + k.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")), v]);
     const instOf = r => {
       const s = r.institute;
       if (!s) return "Not recorded";
-      const l = s.toLowerCase();
-      for (const [k, v] of R.inst) if (l.includes(k)) return v;
+      const l = s.toLowerCase().replace(/\s+/g, " ");
+      for (const [k, v] of instRules) if (k.test(l)) return v;
       return "Other / not listed";
     };
     const destOf = r => {
@@ -632,7 +730,17 @@ window.SCORP_RULES = {"brand":{"Student4uk":"Students4uk","Edmine":"EdMine","Wor
       if (/usa|canada|america/.test(s)) return "USA / Canada";
       return "Other";
     };
-    const officeOf = r => { const s = r.supplier; return !s || s.toLowerCase() === "not registered" ? NONE_OFFICE : s; };
+    // Partner offices are grouped by their SN code (the partner's account code), because the same office is spelt
+    // several ways ("Faisalabad" / "FSD", double spaces); each office shows under its most common spelling.
+    const officeRaw = r => { const s = (r.supplier || "").replace(/\s+/g, " ").trim(); return s.toLowerCase() === "not registered" ? "" : s; };
+    const officeKey = s => { const m = /\bSN\s*-?\s*0*(\d+)$/i.exec(s); return m ? "SN" + m[1] : s.toLowerCase(); };
+    const officeName = new Map();
+    {
+      const spell = new Map();
+      for (const r of all) { const s = officeRaw(r); if (s) { const k = officeKey(s); bump(spell.get(k) || spell.set(k, new Map()).get(k), s); } }
+      spell.forEach((m, k) => officeName.set(k, [...m].sort((a, b) => b[1] - a[1] || (a[0] < b[0] ? -1 : 1))[0][0]));
+    }
+    const officeOf = r => { const s = officeRaw(r); return s ? officeName.get(officeKey(s)) : NONE_OFFICE; };
     const regionOf = c => R.uk.includes(c) ? 1 : c in R.geo ? 0 : R.india.includes(c) ? 2 : R.gulf.includes(c) ? 3 : 4;
 
     // dates -> month index from January of the earliest year
@@ -661,16 +769,44 @@ window.SCORP_RULES = {"brand":{"Student4uk":"Students4uk","Edmine":"EdMine","Wor
     const bi = idx(brands), ci = idx(cities), ii = idx(insts), di = idx(dests), pi = idx(offices), si = idx(R.segs);
     const segOf = (kind, r) => { const s = si.get(kind ? (r["admission group"] || "No team") : (r.source || "Unknown")); return s === undefined ? si.get("Unknown") : s; };
 
-    const iks = [...new Set(dep.map(r => intakeKey(r.$y, r.$mon)))].sort((a, b) => a - b);
-    const intakes = iks.map(intakeName).concat([NO_MATCH]);
-    const ti = idx(iks), noMatch = intakes.length - 1;
+    const segs = R.segs.concat([NO_VISA_YET, NO_DEPOSIT].filter(x => !R.segs.includes(x))), noVisa = segs.indexOf(NO_VISA_YET), noDep = segs.indexOf(NO_DEPOSIT);
 
-    // a student journey is keyed by name + brand: names alone collide too often ("Muhammad Usman")
+    // A student journey is keyed by name + brand: names alone collide too often (one common name appears 65 times).
+    // A visa links to the student's deposits paid up to MATCH_WINDOW days before it, or filled in up to LATE_DAYS after it.
+    // With no exact name, it links to a one-letter spelling variant under the same brand (see oneEdit), when that is
+    // unambiguous and the deposit is not already linked to another visa by its exact name.
     const key = r => { const n = (r["student full name"] || "").toLowerCase().replace(/[^a-z]/g, ""); return n ? n + "|" + brandOf(r) : ""; };
-    const visaDays = new Map(), depsByKey = new Map();
-    for (const r of visa) { const k = key(r); if (k) (visaDays.get(k) || visaDays.set(k, []).get(k)).push(r.$day); }
+    const depsByKey = new Map();
     for (const r of dep) { const k = key(r); if (k) (depsByKey.get(k) || depsByKey.set(k, []).get(k)).push(r); }
     depsByKey.forEach(a => a.sort((x, y) => x.$day - y.$day));
+    const inWindow = (v, d) => d.$day - v.$day <= LATE_DAYS * DAY && v.$day - d.$day <= MATCH_WINDOW * DAY;
+    let linkedLate = 0, linkedVariant = 0;
+    const exactLinked = new Set();
+    for (const d of dep) d.$v = null; // rows can be built twice (refresh, tests): start clean
+    for (const v of visa) {
+      const k = key(v);
+      v.$ds = k ? (depsByKey.get(k) || []).filter(d => inWindow(v, d)) : [];
+      v.$ds.forEach(d => exactLinked.add(d));
+    }
+    // spelling variants: deposits bucketed by brand, first letter and length, so each visa checks only a few
+    const bucket = new Map(), bk = (b, L, n) => b + "|" + L[0] + "|" + n;
+    for (const d of dep) { [d.$L, d.$S] = nameParts(d["student full name"]); if (d.$L.length >= MIN_VARIANT - 1) { const k = bk(brandOf(d), d.$L, d.$L.length); (bucket.get(k) || bucket.set(k, []).get(k)).push(d); } }
+    for (const v of visa) {
+      if (v.$ds.length) continue;
+      const [L, S] = nameParts(v["student full name"]);
+      if (L.length < MIN_VARIANT) continue;
+      const c = [];
+      for (const n of [L.length - 1, L.length, L.length + 1]) for (const d of bucket.get(bk(brandOf(v), L, n)) || [])
+        if (!exactLinked.has(d) && inWindow(v, d) && oneEdit(L, d.$L, S, d.$S)) c.push(d);
+      if (c.length && c.every(d => d.$L === c[0].$L)) { v.$ds = c.sort((x, y) => x.$day - y.$day); linkedVariant++; }
+    }
+    // each deposit takes the earliest visa it is linked to: that visa sets its intake and team
+    for (const v of visa) for (const d of v.$ds) if (!d.$v || v.$day < d.$v.$day) d.$v = v;
+    for (const v of visa) if (v.$ds.length && v.$ds[0].$day > v.$day) linkedLate++;
+    for (const r of dep) r.$t = r.$v ? intakeKey(r.$v.$y, r.$v.$mon) : depIntakeKey(r.$y, r.$mon);
+    for (const r of visa) r.$t = intakeKey(r.$y, r.$mon);
+    const iks = [...new Set(all.map(r => r.$t))].sort((a, b) => a - b);
+    const intakes = iks.map(intakeName), ti = idx(iks);
 
     const cube = new Map(), lag = [];
     const add = a => bump(cube, a.join());
@@ -679,10 +815,9 @@ window.SCORP_RULES = {"brand":{"Student4uk":"Students4uk","Edmine":"EdMine","Wor
     const addRecent = (r, a) => { const age = Math.round((last - r.$day) / DAY); if (age < RECENT_DAYS) bump(recent, [age].concat(a.slice(1)).join()); };
     let dupDeposits = 0;
     for (const r of dep) {
-      const k = key(r), vs = k ? visaDays.get(k) : null;
-      const converted = !!vs && vs.some(v => v >= r.$day && v - r.$day <= MATCH_WINDOW * DAY);
+      const k = key(r), converted = !!r.$v;
       if (k) { const same = depsByKey.get(k); const j = same.indexOf(r); if (j > 0 && r.$day - same[j - 1].$day <= DUP_WINDOW * DAY) dupDeposits++; }
-      const row = [r.$m, bi.get(brandOf(r)), ci.get(cityOf(r)), ii.get(instOf(r)), 0, segOf(0, r), di.get(destOf(r)), ti.get(intakeKey(r.$y, r.$mon)), pi.get(officeOf(r)), converted ? 1 : 0, lateOf(r)];
+      const row = [r.$m, bi.get(brandOf(r)), ci.get(cityOf(r)), ii.get(instOf(r)), 0, segOf(0, r), di.get(destOf(r)), ti.get(r.$t), pi.get(officeOf(r)), converted ? 1 : 0, lateOf(r), converted ? segOf(1, r.$v) : noVisa];
       add(row); addRecent(r, row);
     }
     let unmatchedVisas = 0, dupVisas = 0;
@@ -690,14 +825,14 @@ window.SCORP_RULES = {"brand":{"Student4uk":"Students4uk","Edmine":"EdMine","Wor
     for (const r of visa) { const k = key(r); if (k) (visasByKey.get(k) || visasByKey.set(k, []).get(k)).push(r.$day); }
     visasByKey.forEach(a => { a.sort((x, y) => x - y); for (let j = 1; j < a.length; j++) if (a[j] - a[j - 1] <= DUP_VISA_WINDOW * DAY) dupVisas++; });
     for (const r of visa) {
-      const k = key(r), ds = k ? depsByKey.get(k) : null;
-      const first = ds ? ds.find(d => d.$day <= r.$day && r.$day - d.$day <= MATCH_WINDOW * DAY) : null;
+      const first = r.$ds[0] || null; // the student's earliest linked deposit
       const b = bi.get(brandOf(r)), c = ci.get(cityOf(r)), i = ii.get(instOf(r)), d = di.get(destOf(r)), s = segOf(1, r), p = pi.get(officeOf(r));
-      const t = first ? ti.get(intakeKey(first.$y, first.$mon)) : noMatch;
+      const t = ti.get(r.$t);
       if (!first) unmatchedVisas++;
-      const row = [r.$m, b, c, i, 1, s, d, t, p, first ? 1 : 0, lateOf(r)];
+      const row = [r.$m, b, c, i, 1, s, d, t, p, first ? 1 : 0, lateOf(r), first ? segOf(0, first) : noDep];
       add(row); addRecent(r, row);
-      if (first) lag.push([r.$m, b, c, Math.round((r.$day - first.$day) / DAY), i, d, t, s, p]);
+      // days from deposit to visa; a deposit filled in after the visa has no meaningful gap, so it is left out of the timing
+      if (first && first.$day <= r.$day) lag.push([r.$m, b, c, Math.round((r.$day - first.$day) / DAY), i, d, t, s, p, segOf(0, first)]);
     }
 
     // data quality: what the ops team should fix in the sheet, or add to rules.json
@@ -719,6 +854,9 @@ window.SCORP_RULES = {"brand":{"Student4uk":"Students4uk","Edmine":"EdMine","Wor
     }
     const dq = {
       rows: { visa: visa.length, deposit: dep.length },
+      read: { visa: visaTab.rows.length, deposit: depTab.rows.length },
+      doubles: { visa: visaTab.rows.length - visa.length, deposit: depTab.rows.length - dep.length },
+      linkedLate, linkedVariant,
       badDates: { visa: visaTab.bad, deposit: depTab.bad },
       instMissing: { visa: instMissingV, deposit: instMissingD },
       officeMissing: { visa: officeMissingV, deposit: officeMissingD },
@@ -731,14 +869,14 @@ window.SCORP_RULES = {"brand":{"Student4uk":"Students4uk","Edmine":"EdMine","Wor
     return {
       asOf: end.toISOString().slice(0, 10), y0, mn, firstM, lastFrac,
       brands, cities, insts, dests, intakes, offices,
-      cityRegion: cities.map(regionOf), geo: R.geo, segs: R.segs,
+      cityRegion: cities.map(regionOf), geo: R.geo, segs,
       cube: [...cube].map(([k, v]) => [...k.split(",").map(Number), v]),
       recent: [...recent].map(([k, v]) => [...k.split(",").map(Number), v]), recentDays: RECENT_DAYS,
       lag, dq, totals: { visa: visa.length, deposit: dep.length },
     };
   }
 
-  const api = { parseCSV, toObjs, buildData, intakeKey, intakeName, C, L, REGIONS, NONE_OFFICE, NO_MATCH, MATCH_WINDOW };
+  const api = { parseCSV, toObjs, buildData, intakeKey, depIntakeKey, intakeName, nameParts, oneEdit, dedupe, LATE_DAYS, MIN_VARIANT, C, L, REGIONS, NONE_OFFICE, NO_MATCH, NO_VISA_YET, NO_DEPOSIT, MATCH_WINDOW };
   if (typeof module === "object" && module.exports) module.exports = api;
   else root.ScorpData = api;
 })(typeof self !== "undefined" ? self : this);
@@ -877,10 +1015,15 @@ const DIMS = [
   { key: "city", label: "City", col: C.c, lag: L.c, list: () => D.cities },
   { key: "region", label: "Region", get: r => D.cityRegion[r[C.c]], lg: l => D.cityRegion[l[L.c]], list: () => S.REGIONS },
   { key: "inst", label: "University", col: C.i, lag: L.i, list: () => D.insts },
-  { key: "intake", label: "Intake", col: C.t, lag: L.t, list: () => D.intakes, byId: true, hint: "From the deposit month: Nov–Feb Jan, Mar–Jun May, Jul–Oct Sep." },
+  { key: "intake", label: "Intake", col: C.t, lag: L.t, list: () => D.intakes, byId: true, hint: "Not in the sheet, so worked out: a visa (and the deposit that led to it) by the visa month, Nov–Feb Jan, Mar–Jun May, Jul–Oct Sep; a deposit with no visa yet by the expected intake, Sep–Dec Jan, Jan–Apr May, May–Aug Sep." },
   { key: "dest", label: "Destination", col: C.d, lag: L.d, list: () => D.dests },
-  { key: "team", label: "Team", col: C.s, lag: L.s, kinds: [1], list: () => D.segs, hint: "Admission team. Applies to visas only." },
-  { key: "source", label: "Deposit source", col: C.s, kinds: [0], list: () => D.segs, hint: "Applies to deposits only." },
+  // Team is recorded on visas and Deposit source on deposits. Each reaches the other kind through the deposit-visa
+  // link (cube column C.v): Team keeps the deposits that became a visa with that team ("No visa yet" = the rest),
+  // Deposit source keeps the visas whose deposit came from that source ("No deposit found" = visas with no linked deposit).
+  { key: "team", label: "Team", get: r => r[C.k] ? r[C.s] : r[C.v], lg: l => l[L.s], list: () => D.segs, opts: ["Team 1", "Team 2", "No team", S.NO_VISA_YET],
+    hint: "Admission team, recorded on visas. Deposits shown are the ones that became a visa with that team (No visa yet = deposits with no visa), so conversion and open pipeline are hidden while it is on." },
+  { key: "source", label: "Deposit source", get: r => r[C.k] ? r[C.v] : r[C.s], lg: l => l[L.o], list: () => D.segs, opts: ["Direct", "Indirect", "Agent", "Referral", "Unknown", S.NO_DEPOSIT],
+    hint: "Where the deposit came from. Visas shown are the ones whose deposit came from that source (No deposit found = visas with no linked deposit)." },
 ];
 const DIM = {};
 DIMS.forEach(d => {
@@ -897,25 +1040,28 @@ const VIEWS = [
   { id: "all", name: "All view", c: "var(--gold)", desc: "Everything in one place: KPIs, timeline, brands, map, universities, seasonality, performance table, intakes and pipeline, data quality." },
   { id: "ceo", name: "CEO View", c: "var(--teal)", desc: "Deposits and visas by brand, university, day, month and year first, then everything in the All view." },
   { id: "product", name: "Product team view", c: "var(--rose)", desc: "A university heat map with every university named, first under the KPI cards, then everything in the All view." },
-  { id: "finance", name: "Finance view", c: "var(--gold)", desc: "The numbers finance needs." }
+  { id: "finance", name: "Finance view", c: "var(--gold)", desc: "Revenue from a value per deposit you enter, month by month against last year, partner offices, deposit sources, deposits with no visa after 6 months, and visas by university and intake; then everything in the All view." }
 ];
 const VIEW = Object.fromEntries(VIEWS.map(v => [v.id, v]));
 
-const state = { page: null, r: [0, 0], view: "home", kind: 0, tab: "overview", lg: { dim: "brand", sort: "vis", dir: -1, q: "", all: false } };
+// fv: value of one deposit typed into the Finance view (empty = counts only), cur: its currency, fin: "show all" toggles of its tables
+const state = { page: null, r: [0, 0], view: "home", kind: 0, tab: "overview", lg: { dim: "brand", sort: "vis", dir: -1, q: "", all: false }, fv: null, cur: "£", fin: {} };
 DIMS.forEach(d => state[d.key] = new Set());
 const full = () => state.r[0] === 0 && state.r[1] === MN;
 const on = (k, i) => !state[k].size || state[k].has(i);
 function toggle(k, i) { const s = state[k]; s.has(i) ? s.delete(i) : s.add(i); renderAll(); }
 
 // rng: undefined = the selected period, "all" = no period filter, [a,b] = that range
-function cubeSel(cube, kind, skip, r0) {
-  const act = DIMS.filter(d => d.key !== skip && state[d.key].size && (!d.kinds || d.kinds.includes(kind)));
+// over: {key: Set} replaces the chosen values of those filters (last year's comparison moves the intake back a year)
+function cubeSel(cube, kind, skip, r0, over) {
+  const F = k => (over && over[k]) || state[k];
+  const act = DIMS.filter(d => d.key !== skip && F(d.key).size);
   const out = [];
   for (const r of cube) {
     if (r[C.k] !== kind) continue;
     if (r0 && (r[C.m] < r0[0] || r[C.m] > r0[1])) continue;
     let ok = true;
-    for (const d of act) if (!state[d.key].has(d.get(r))) { ok = false; break; }
+    for (const d of act) if (!F(d.key).has(d.get(r))) { ok = false; break; }
     if (ok) out.push(r);
   }
   return out;
@@ -929,12 +1075,22 @@ function lagRows(skip, rng) {
 const sum = rows => rows.reduce((a, r) => a + r[C.n], 0);
 function by(rows, f) { const m = new Map(); for (const r of rows) { const k = f(r); m.set(k, (m.get(k) || 0) + r[C.n]); } return m; }
 const col = c => r => r[c];
-function conv(depRows) { let n = 0, x = 0; for (const r of depRows) if (r[C.m] <= MN - MATURE) { n += r[C.n]; x += r[C.x] * r[C.n]; } return n ? x / n : null; }
-const isOpen = r => !r[C.x] && r[C.m] > MN - OPEN;
+// with a Team filter the deposits are only those that became a visa, so conversion and open pipeline would mislead
+const teamOn = () => state.team.size > 0;
+const TEAM_NOTE = "not shown with a Team filter: a team is only known once there is a visa";
+function conv(depRows) { if (teamOn()) return null; let n = 0, x = 0; for (const r of depRows) if (r[C.m] <= MN - MATURE) { n += r[C.n]; x += r[C.x] * r[C.n]; } return n ? x / n : null; }
+const isOpen = r => !r[C.x] && r[C.m] > MN - OPEN && !teamOn();
 const yoyRange = () => state.r[0] - 12 >= 0 ? [state.r[0] - 12, state.r[1] - 12] : null;
 // last year's rows for a comparison: when the period ends with the part-filled newest month,
 // the same month last year is cut to the same days (1-13 Nov 2026 is compared with 1-13 Nov 2025)
-const yoySel = (kind, skip, yr) => { const out = sel(kind, skip, yr); return state.r[1] === MN ? out.filter(r => !(r[C.m] === MN - 12 && r[C.l])) : out; };
+// An Intake filter moves back a year as well: Sep 2026 deposits this year are compared with Sep 2025 deposits a year earlier.
+const shiftIntake = (id, by) => { const n = D.intakes[id]; if (!n) return -1; const [s, y] = n.split(" "); return D.intakes.indexOf(s + " " + (+y + by)); };
+const yoySel = (kind, skip, yr) => {
+  let over = null;
+  if (skip !== "intake" && state.intake.size) { over = { intake: new Set([...state.intake].map(i => shiftIntake(i, -1)).filter(i => i >= 0)) }; if (!over.intake.size) return []; }
+  const out = cubeSel(D.cube, kind, skip, yr, over);
+  return state.r[1] === MN ? out.filter(r => !(r[C.m] === MN - 12 && r[C.l])) : out;
+};
 // months a period really covers: none before the sheet's first record, and the newest month only as far as the data goes
 const monthsIn = ([a, b]) => { const s = Math.max(a, D.firstM); return s > b ? 0 : b - s + 1 - (b === MN ? 1 - D.lastFrac : 0); };
 const median = a => a.length ? d3.median(a) : null;
@@ -955,7 +1111,7 @@ function mk(id, h) {
 const shown = {};
 function setNum(id, v, f) {
   const el = $("#" + id), out = f || (x => fmt(Math.round(x)));
-  if (v == null) { el.textContent = "—"; shown[id] = 0; return; }
+  if (v == null) { d3.select(el).interrupt(); el.textContent = "—"; shown[id] = 0; return; }
   const from = shown[id] || 0; shown[id] = v;
   if (reduced()) { el.textContent = out(v); return; }
   d3.select(el).transition().duration(700).ease(d3.easeCubicOut).tween("n", () => { const i = d3.interpolateNumber(from, v); return t => { el.textContent = out(i(t)); }; });
@@ -1017,24 +1173,30 @@ function buildFilterBar() {
 function closePanels() { for (const k in panels) panels[k].pan.hidden = true; }
 document.addEventListener("click", closePanels);
 document.addEventListener("keydown", e => { if (e.key === "Escape") closePanels(); });
+// every value in the sheet is listed, not only those in the selected period; the numbers are
+// deposits and visas in the current period and other filters
 function fillPanel(k) {
-  const P = panels[k], d = P.dim, kind = d.kinds ? d.kinds[0] : 1;
-  const m = by(sel(kind, d.key), d.get);
-  state[k].forEach(v => { if (!m.has(v)) m.set(v, 0); });
-  let opts = [...m].map(([id, n]) => ({ id, n, label: d.name(id) }))
+  const P = panels[k], d = P.dim;
+  const cnt = [0, 1].map(kd => by(sel(kd, d.key), d.get));
+  const ids = new Set();
+  for (const r of D.cube) ids.add(d.get(r));
+  state[k].forEach(v => ids.add(v));
+  let opts = [...ids].map(id => { const dep = cnt[0].get(id) || 0, vis = cnt[1].get(id) || 0; return { id, dep, vis, n: dep + vis, label: d.name(id) }; })
     .filter(o => o.label && (o.label !== d.hide || state[k].has(o.id)));
-  if (k === "team") opts = opts.filter(o => ["Team 1", "Team 2", "No team"].includes(o.label));
-  if (k === "source") opts = opts.filter(o => !["Team 1", "Team 2", "No team"].includes(o.label));
+  if (d.opts) opts = opts.filter(o => d.opts.includes(o.label));
   const term = P.q.value.trim().toLowerCase();
   if (term) opts = opts.filter(o => o.label.toLowerCase().includes(term));
-  // intakes newest first, with "No matched deposit" at the end
-  opts.sort(d.byId ? (a, b) => (a.label === S.NO_MATCH) - (b.label === S.NO_MATCH) || b.id - a.id : (a, b) => b.n - a.n);
+  // intakes newest first; the rest by count, values with nothing in this view last
+  opts.sort(d.byId ? (a, b) => b.id - a.id : (a, b) => b.n - a.n || a.label.localeCompare(b.label));
   P.list.innerHTML = "";
   if (!opts.length) { P.list.innerHTML = '<div class="none">Nothing matches.</div>'; return; }
+  const what = "deposits · visas";
+  P.list.insertAdjacentHTML("beforeend", `<div class="fleg">${what}${full() ? "" : " in the period"}</div>`);
   opts.slice(0, 250).forEach(o => {
     const e = document.createElement("div"), act = state[k].has(o.id);
-    e.className = "fopt" + (act ? " on" : ""); e.setAttribute("role", "checkbox"); e.setAttribute("aria-checked", act); e.tabIndex = 0;
-    e.innerHTML = `<span class="bx">${act ? "✓" : ""}</span><span class="t" title="${esc(o.label)}">${esc(o.label)}</span><span class="n">${fmt(o.n)}</span>`;
+    const num = `${fmt(o.dep)} · ${fmt(o.vis)}`;
+    e.className = "fopt" + (act ? " on" : "") + (o.n ? "" : " zero"); e.setAttribute("role", "checkbox"); e.setAttribute("aria-checked", act); e.tabIndex = 0;
+    e.innerHTML = `<span class="bx">${act ? "✓" : ""}</span><span class="t" title="${esc(o.label)}">${esc(o.label)}</span><span class="n" title="${what}">${num}</span>`;
     e.onclick = () => toggle(k, o.id);
     e.onkeydown = ev => { if (ev.key === " " || ev.key === "Enter") { ev.preventDefault(); toggle(k, o.id); } };
     P.list.appendChild(e);
@@ -1075,13 +1237,13 @@ function chips() {
 /* ---------------- KPIs + insights ---------------- */
 function kpis() {
   const v = sel(1), d = sel(0), vt = sum(v), dt = sum(d), len = monthsIn(state.r), yr = yoyRange();
-  const LY = "vs same period last year";
+  const LY = state.intake.size ? "vs the intake a year earlier, same months" : "vs same period last year";
   setNum("k-visa", vt); setNum("k-dep", dt);
   const cv = conv(d);
   setNum("k-conv", cv == null ? null : cv * 100, x => Math.round(x) + "%");
   setNum("k-lag", median(lagRows().map(l => l[L.days])));
   const open = sel(0, null, "all").filter(isOpen), on3 = open.filter(r => r[C.m] <= MN - 3);
-  setNum("k-open", sum(open));
+  setNum("k-open", teamOn() ? null : sum(open));
   setNum("k-rate", len ? vt / len : null);
   if (yr && !full()) {
     $("#k-visa-s").innerHTML = delta(vt, sum(yoySel(1, null, yr)), LY) || "no visas last year";
@@ -1093,7 +1255,8 @@ function kpis() {
     $("#k-dep-s").textContent = "pick a period to compare with last year";
     $("#k-conv-s").textContent = cv == null ? "period too recent to judge" : "deposits at least 6 months old";
   }
-  $("#k-open-s").textContent = sum(open) ? `last 6 months, no visa yet · ${fmt(sum(on3))} older than 3 months` : "no open deposits";
+  if (teamOn()) $("#k-conv-s").textContent = TEAM_NOTE;
+  $("#k-open-s").textContent = teamOn() ? TEAM_NOTE : sum(open) ? `last 6 months, no visa yet · ${fmt(sum(on3))} older than 3 months` : "no open deposits";
 
   sparks(v, d);
 
@@ -1105,7 +1268,7 @@ function kpis() {
     g.forEach(([n, x], b) => { if (n >= 100) bc.push([b, x / n]); }); return bc.sort((a, b) => b[1] - a[1]); };
   let bc = brandConv(d), bcNote = "";
   if (bc.length < 2) { const all = brandConv(sel(0, null, "all")); if (all.length > 1) { bc = all; bcNote = " over all periods"; } }
-  if (bc.length > 1) I.push(`Best conversion${bcNote}: <b>${esc(D.brands[bc[0][0]])}</b> at <b>${pct(bc[0][1])}</b>. Lowest: <b>${esc(D.brands[bc[bc.length - 1][0]])}</b> at <b>${pct(bc[bc.length - 1][1])}</b> (brands with 100+ matured deposits).`);
+  if (bc.length > 1 && !teamOn()) I.push(`Best conversion${bcNote}: <b>${esc(D.brands[bc[0][0]])}</b> at <b>${pct(bc[0][1])}</b>. Lowest: <b>${esc(D.brands[bc[bc.length - 1][0]])}</b> at <b>${pct(bc[bc.length - 1][1])}</b> (brands with 100+ matured deposits).`);
   else if (cv != null) I.push(`<b>${pct(cv)}</b> of matured deposits in this view turned into a visa.`);
   const iv = [...by(v, col(C.i))].filter(x => !["Not recorded", "Other / not listed"].includes(D.insts[x[0]])).sort((a, b) => b[1] - a[1]);
   const cvv = [...by(v, col(C.c))].filter(x => D.cities[x[0]] !== "Unknown").sort((a, b) => b[1] - a[1]);
@@ -1120,7 +1283,7 @@ function sparks(v, d) {
   const dm = by(a === state.r[0] ? d : sel(0, null, [a, b]), col(C.m));
   const dAll = a === state.r[0] ? d : sel(0, null, [a, b]), cm = new Map();
   for (const r of dAll) if (r[C.m] <= MN - MATURE) { const o = cm.get(r[C.m]) || cm.set(r[C.m], [0, 0]).get(r[C.m]); o[0] += r[C.n]; o[1] += r[C.x] * r[C.n]; }
-  const conv = ms.filter(m => cm.has(m) && cm.get(m)[0] >= 5).map(m => [m, cm.get(m)[1] / cm.get(m)[0]]);
+  const conv = teamOn() ? [] : ms.filter(m => cm.has(m) && cm.get(m)[0] >= 5).map(m => [m, cm.get(m)[1] / cm.get(m)[0]]);
   const visPts = ms.map(m => [m, vm.get(m) || 0]);
   spark("#sp-visa", visPts, "var(--gold)", n => fmt(n) + " visas");
   spark("#sp-dep", ms.map(m => [m, dm.get(m) || 0]), "var(--teal)", n => fmt(n) + " deposits");
@@ -1320,10 +1483,12 @@ function leagueData() {
   for (const r of sel(0, d.key)) { const o = get(d.get(r)); o.dep += r[C.n]; if (r[C.m] <= MN - MATURE) { o.mN += r[C.n]; o.mX += r[C.x] * r[C.n]; } }
   for (const r of sel(1, d.key)) get(d.get(r)).vis += r[C.n];
   for (const r of sel(0, d.key, "all")) if (isOpen(r)) get(d.get(r)).open += r[C.n];
-  if (yr) for (const r of yoySel(1, d.key, yr)) get(d.get(r)).prev += r[C.n];
+  // ranked by intake, each intake is compared with the same intake a year earlier (Sep 2026 with Sep 2025)
+  const lyId = d.key === "intake" ? r => shiftIntake(d.get(r), 1) : d.get;
+  if (yr) for (const r of yoySel(1, d.key, yr)) { const id = lyId(r); if (id >= 0) get(id).prev += r[C.n]; }
   for (const l of lagRows(d.key)) get(d.lg(l)).lags.push(l[L.days]);
   return [...g.values()].filter(o => (o.dep || o.vis || o.open) && d.name(o.id) && d.name(o.id) !== d.hide).map(o => ({
-    ...o, name: d.name(o.id), conv: o.mN >= 10 ? o.mX / o.mN : null, med: median(o.lags),
+    ...o, name: d.name(o.id), conv: o.mN >= 10 && !teamOn() ? o.mX / o.mN : null, med: median(o.lags),
     yoy: yr && !full() && o.prev ? (o.vis - o.prev) / o.prev : null,
   }));
 }
@@ -1354,7 +1519,7 @@ function league() {
       <td class="n">${fmt(o.vis)}<div class="mini" style="width:${Math.max(2, 100 * o.vis / maxV)}%"></div></td>
       <td class="n${o.conv == null ? " muted" : ""}">${pct(o.conv)}${o.conv != null ? `<span class="meter"><i style="width:${Math.round(o.conv * 100)}%"></i></span>` : ""}</td>
       <td class="n${o.med == null ? " muted" : ""}">${o.med == null ? "—" : Math.round(o.med)}</td>
-      <td class="n">${fmt(o.open)}</td>
+      <td class="n">${teamOn() ? '<span class="muted">—</span>' : fmt(o.open)}</td>
       <td class="n">${o.yoy == null ? `<span class="muted">${yrOn ? "—" : "pick a period"}</span>` : `<span class="${o.yoy >= 0 ? "up" : "down"}">${o.yoy >= 0 ? "▲" : "▼"} ${Math.abs(o.yoy * 100).toFixed(0)}%</span>`}</td></tr>`;
   });
   html += "</tbody></table>";
@@ -1369,11 +1534,11 @@ $("#lq").oninput = e => { state.lg.q = e.target.value; league(); };
 
 /* ---------------- intakes & pipeline ---------------- */
 function intakeChart() {
-  const dep = sel(0, "intake", "all"), vis = sel(1, "intake", "all"), last = D.intakes.length - 1;
+  const dep = sel(0, "intake", "all"), vis = sel(1, "intake", "all");
   const g = new Map(), get = t => g.get(t) || g.set(t, { t, dep: 0, x: 0, vis: 0, maxM: 0 }).get(t);
   for (const r of dep) { const o = get(r[C.t]); o.dep += r[C.n]; o.x += r[C.x] * r[C.n]; o.maxM = Math.max(o.maxM, r[C.m]); }
-  for (const r of vis) if (r[C.t] !== last) get(r[C.t]).vis += r[C.n];
-  const rows = [...g.values()].filter(o => o.t !== last).sort((a, b) => a.t - b.t).slice(-12);
+  for (const r of vis) get(r[C.t]).vis += r[C.n];
+  const rows = [...g.values()].sort((a, b) => a.t - b.t).slice(-12);
   const h = 300, { svg, w } = mk("#intakes", h), m = { t: 34, r: 8, b: 40, l: 44 };
   if (!rows.length) { svg.append("text").attr("y", 30).text("No deposits in this view."); return; }
   const x = d3.scaleBand(rows.map(o => o.t), [m.l, w - m.r]).padding(.28), xi = d3.scaleBand(["dep", "vis"], [0, x.bandwidth()]).padding(.08);
@@ -1384,19 +1549,20 @@ function intakeChart() {
     const prog = o.maxM > MN - MATURE, sel_ = on("intake", o.t);
     const gg = svg.append("g").attr("class", "clickable").attr("transform", `translate(${x(o.t)},0)`).attr("opacity", sel_ ? 1 : .3)
       .on("click", () => toggle("intake", o.t))
-      .on("mousemove", e => showTip(e, `<b>${D.intakes[o.t]} intake</b>${prog ? " (in progress)" : ""}<br>Deposits: ${fmt(o.dep)}<br>Visas: ${fmt(o.vis)}<br>Conversion: ${pct(o.dep ? o.x / o.dep : null)}`)).on("mouseleave", hideTip);
+      .on("mousemove", e => showTip(e, `<b>${D.intakes[o.t]} intake</b>${prog ? " (in progress)" : ""}<br>Deposits: ${fmt(o.dep)}<br>Visas: ${fmt(o.vis)}<br>Conversion: ${pct(o.dep && !teamOn() ? o.x / o.dep : null)}`)).on("mouseleave", hideTip);
     gg.append("rect").attr("width", x.bandwidth()).attr("height", h - m.b - m.t + 20).attr("y", m.t - 20).style("fill", "transparent");
     [["dep", o.dep, "var(--teal)"], ["vis", o.vis, "var(--gold)"]].forEach(([k, v, c]) =>
       gg.append("rect").attr("x", xi(k)).attr("width", xi.bandwidth()).attr("rx", 4).style("fill", c).attr("fill-opacity", prog ? .55 : 1)
         .attr("y", h - m.b).attr("height", 0).transition().duration(600).attr("y", y(v)).attr("height", h - m.b - y(v)));
     gg.append("text").attr("x", x.bandwidth() / 2).attr("y", y(Math.max(o.dep, o.vis)) - 8).attr("text-anchor", "middle")
-      .style("fill", "var(--ink)").style("font-family", "var(--mono)").style("font-size", "11.5px").text(o.dep ? pct(o.x / o.dep) : "");
+      .style("fill", "var(--ink)").style("font-family", "var(--mono)").style("font-size", "11.5px").text(o.dep && !teamOn() ? pct(o.x / o.dep) : "");
     if (prog) gg.append("text").attr("x", x.bandwidth() / 2).attr("y", h - 6).attr("text-anchor", "middle").style("fill", "var(--ink3)").style("font-size", "10.5px").text("in progress");
   });
   svg.append("text").attr("x", w - m.r).attr("y", 12).attr("text-anchor", "end").style("fill", "var(--ink3)").style("font-size", "11px").text("% above each pair = deposits that became a visa");
 }
 
 function ageChart() {
+  if (teamOn()) { const { svg } = mk("#age", 60); svg.append("text").attr("y", 30).style("fill", "var(--ink3)").text("Not shown with a Team filter: a team is only known once there is a visa."); return; }
   const open = sel(0, null, "all").filter(isOpen), byAge = by(open, r => MN - r[C.m]);
   const labels = ["This month", "1 month", "2 months", "3 months", "4 months", "5 months"];
   const data = labels.map((l, i) => ({ l, n: byAge.get(i) || 0, i }));
@@ -1433,7 +1599,7 @@ function srcChart() {
   for (const r of dep) { const o = g.get(r[C.s]) || g.set(r[C.s], { id: r[C.s], n: 0, mN: 0, mX: 0 }).get(r[C.s]); o.n += r[C.n]; if (r[C.m] <= MN - MATURE) { o.mN += r[C.n]; o.mX += r[C.x] * r[C.n]; } }
   const rows = [...g.values()].sort((a, b) => b.n - a.n), tot = d3.sum(rows, o => o.n) || 1;
   $("#src").innerHTML = rows.length ? `<table><thead><tr><th>Source</th><th>Share</th><th>Deposits</th><th>Conversion</th></tr></thead><tbody>` + rows.map(o =>
-    `<tr class="pick${state.source.has(o.id) ? " on" : ""}" data-id="${o.id}"><td class="nm">${esc(seg.name(o.id))}</td><td style="width:30%"><div class="mini t" style="width:${Math.max(2, 100 * o.n / tot)}%"></div></td><td class="n">${fmt(o.n)}</td><td class="n">${pct(o.mN >= 10 ? o.mX / o.mN : null)}</td></tr>`).join("") + "</tbody></table>"
+    `<tr class="pick${state.source.has(o.id) ? " on" : ""}" data-id="${o.id}"><td class="nm">${esc(seg.name(o.id))}</td><td style="width:30%"><div class="mini t" style="width:${Math.max(2, 100 * o.n / tot)}%"></div></td><td class="n">${fmt(o.n)}</td><td class="n">${pct(o.mN >= 10 && !teamOn() ? o.mX / o.mN : null)}</td></tr>`).join("") + "</tbody></table>"
     : '<div class="hint">No deposits in this view.</div>';
   $$("#src tr.pick").forEach(tr => tr.onclick = () => toggle("source", +tr.dataset.id));
 }
@@ -1470,8 +1636,9 @@ function quality() {
   const p = (n, of) => of ? (100 * n / of).toFixed(n / of < .1 ? 1 : 0) + "%" : "0%";
   const card = (label, v, sub, bad) => `<div class="dqc"><div class="l">${label} <span class="st ${bad ? "warn" : "ok"}">${bad ? "⚠ fix" : "✓ ok"}</span></div><div class="v">${v}</div><div class="s">${sub}</div></div>`;
   $("#dq").innerHTML = [
-    card("Rows read", fmt(all), `${fmt(V)} visas, ${fmt(Dp)} deposits. ${fmt(q.badDates.visa + q.badDates.deposit)} skipped for a missing or unreadable date.`, q.badDates.visa + q.badDates.deposit > 0),
-    card("Visas with no matching deposit", p(q.unmatchedVisas, V), `${fmt(q.unmatchedVisas)} visas. Usually a name spelt differently, or a different brand on the deposit.`, q.unmatchedVisas / V > .05),
+    card("Rows read", fmt(q.read.visa + q.read.deposit), `${fmt(q.read.visa)} visas, ${fmt(q.read.deposit)} deposits. ${fmt(q.badDates.visa + q.badDates.deposit)} skipped for a missing or unreadable date.`, q.badDates.visa + q.badDates.deposit > 0),
+    card("Forms sent twice", fmt(q.doubles.visa + q.doubles.deposit), `${fmt(q.doubles.visa)} visas, ${fmt(q.doubles.deposit)} deposits: same day, every field the same. Counted once.`, q.doubles.visa + q.doubles.deposit > 0),
+    card("Visas with no matching deposit", p(q.unmatchedVisas, V), `${fmt(q.unmatchedVisas)} visas. Usually a different brand on the deposit, a name spelt very differently, or a visa from before Nov 2021 (no deposits recorded then). Already linked: ${fmt(q.linkedVariant)} with a one-letter spelling difference, ${fmt(q.linkedLate)} whose deposit form came after the visa form.`, q.unmatchedVisas / V > .05),
     card("Possible duplicate deposits", fmt(q.dupDeposits), "Same student and brand within 14 days. Check before counting deposits.", q.dupDeposits > 0),
     card("Possible duplicate visas", fmt(q.dupVisas), "Same student and brand within 30 days. Each one adds a visa to the totals.", q.dupVisas > 0),
     card("Deposits with no university", p(q.instMissing.deposit, Dp), `${fmt(q.instMissing.deposit)} deposits, ${fmt(q.instMissing.visa)} visas. University charts lean on visas for this reason.`, q.instMissing.deposit / Dp > .05),
@@ -1584,6 +1751,103 @@ function prodBlock() {
   });
 }
 
+/* ---------------- Finance view: revenue from a value per deposit, month by month, offices, sources, universities, refund risk ---------------- */
+// The sheet holds no amounts, so revenue = deposits x the value typed in (state.fv, empty = counts only).
+const CURS = ["£", "$", "€", "Rs"];
+const money = n => state.cur + (state.cur.length > 1 ? " " : "") + fmt(Math.round(n));
+const chg = (x, y) => y ? `<span class="${x >= y ? "up" : "down"}">${x >= y ? "▲" : "▼"} ${Math.abs(Math.round((x - y) / y * 100))}%</span>` : '<span class="muted">—</span>';
+const addTo = (m, k, n) => m.set(k, (m.get(k) || 0) + n);
+// last year's rows for the month table: every month, an Intake filter moved back a year (as in yoySel)
+function lyRows(kind) {
+  if (!state.intake.size) return sel(kind, null, "all");
+  const over = { intake: new Set([...state.intake].map(i => shiftIntake(i, -1)).filter(i => i >= 0)) };
+  return over.intake.size ? cubeSel(D.cube, kind, null, null, over) : [];
+}
+// rows: [{ cells: [name, ...html], id (click to filter), on, muted }]; foot: cells of a total row; key: show-all toggle in state.fin
+function finTable(el, head, rows, o = {}) {
+  const lim = o.limit && !state.fin[o.key] ? o.limit : Infinity, shown = rows.slice(0, lim);
+  if (!rows.length) { $(el).innerHTML = `<div class="hint" style="padding:10px 0">${o.empty || "Nothing in this view."}</div>`; return; }
+  const cell = (c, i, r) => i === 0 ? `<td class="nm${r.muted ? " muted" : ""}" title="${esc(c)}">${esc(c)}</td>` : `<td class="n">${c}</td>`;
+  let h = `<table class="ft"><thead><tr>${head.map(x => `<th>${x}</th>`).join("")}</tr></thead><tbody>`;
+  h += shown.map(r => `<tr class="${r.id != null ? "pick" : ""}${r.on ? " on" : ""}"${r.id != null ? ` data-id="${r.id}"` : ""}>${r.cells.map((c, i) => cell(c, i, r)).join("")}</tr>`).join("");
+  h += "</tbody>";
+  if (o.foot) h += `<tfoot><tr>${o.foot.map((c, i) => i === 0 ? `<td>${esc(c)}</td>` : `<td class="n">${c}</td>`).join("")}</tr></tfoot>`;
+  h += "</table>";
+  if (rows.length > lim || (o.limit && state.fin[o.key] && rows.length > o.limit)) h += `<div class="fmore"><button type="button" data-more="${o.key}">${state.fin[o.key] ? "Show top " + o.limit : "Show all " + fmt(rows.length)}</button></div>`;
+  $(el).innerHTML = h;
+  if (o.dim) $$(el + " tr.pick").forEach(tr => tr.onclick = () => toggle(o.dim, +tr.dataset.id));
+  const more = $(el + " [data-more]"); if (more) more.onclick = () => { state.fin[o.key] = !state.fin[o.key]; finBlock(); };
+}
+function finBlock() {
+  const V = state.fv, rev = n => V ? money(n * V) : null, LY = state.intake.size ? "vs the intake a year earlier, same months" : "vs same period last year";
+  if (document.activeElement !== $("#f-val")) $("#f-val").value = V == null ? "" : V;
+  $("#f-cur").value = state.cur;
+  const dep = sel(0), vis = sel(1), dt = sum(dep), yr = yoyRange();
+  const open = sel(0, null, "all").filter(isOpen), openN = sum(open);
+  const old = dep.filter(r => r[C.m] <= MN - MATURE), lost = old.filter(r => !r[C.x]), lostN = sum(lost);
+
+  // revenue cards (only with a value)
+  if (!V) $("#f-cards").innerHTML = '<div class="fin-hint">Enter the value of one deposit above (for example 2000) to see revenue: total, per month, waiting on a visa and at risk.</div>';
+  else {
+    const card = (l, v, s) => `<div class="fcard"><div class="l">${l}</div><div class="v">${v}</div><div class="s">${s}</div></div>`;
+    const months = monthsIn(state.r);
+    $("#f-cards").innerHTML = `<div class="fin-cards">` +
+      card("Deposit revenue", money(dt * V), `${fmt(dt)} deposits × ${money(V)}` + (yr && !full() ? " · " + (delta(dt, sum(yoySel(0, null, yr)), LY) || "none last year") : "")) +
+      card("Per month", months ? money(dt * V / months) : "—", "average over the period") +
+      card("Waiting on a visa", teamOn() ? "—" : money(openN * V), teamOn() ? TEAM_NOTE : `${fmt(openN)} deposits from the last 6 months with no visa yet`) +
+      card("At risk", teamOn() ? "—" : old.length ? money(lostN * V) : "—", teamOn() ? TEAM_NOTE : old.length ? `${fmt(lostN)} deposits in the period, 6+ months old, no visa: likely refunds or lost` : "no deposit in the period is 6 months old yet") +
+      `</div>`;
+  }
+
+  // month by month, newest first, against the same month last year (the newest, part-filled month against the same days)
+  const lyMap = kind => { const all = new Map(), early = new Map(); for (const r of lyRows(kind)) { addTo(all, r[C.m], r[C.n]); if (!r[C.l]) addTo(early, r[C.m], r[C.n]); } return m => (m === MN ? early : all).get(m - 12) || 0; };
+  const dm = by(dep, col(C.m)), vm = by(vis, col(C.m)), dly = lyMap(0), vly = lyMap(1), mrows = [], tot = [0, 0, 0, 0];
+  for (let m = state.r[1]; m >= Math.max(state.r[0], D.firstM); m--) {
+    const a = dm.get(m) || 0, b = dly(m), c = vm.get(m) || 0, d = vly(m);
+    tot[0] += a; tot[1] += b; tot[2] += c; tot[3] += d;
+    mrows.push({ cells: [mLabel(m) + (m === MN ? " (so far)" : ""), fmt(a), fmt(b), chg(a, b), fmt(c), fmt(d), chg(c, d)].concat(V ? [rev(a), rev(b)] : []) });
+  }
+  finTable("#f-month", ["Month", "Deposits", "Last year", "Change", "Visas", "Last year", "Change"].concat(V ? ["Revenue", "Last year"] : []), mrows,
+    { foot: ["Total", fmt(tot[0]), fmt(tot[1]), chg(tot[0], tot[1]), fmt(tot[2]), fmt(tot[3]), chg(tot[2], tot[3])].concat(V ? [rev(tot[0]), rev(tot[1])] : []) });
+
+  // partner offices: deposits, visas, conversion (deposits 6+ months old), open pipeline; "No partner office" last
+  const g = new Map(), get = id => g.get(id) || g.set(id, { id, dep: 0, vis: 0, mN: 0, mX: 0, open: 0 }).get(id), none = D.offices.indexOf(S.NONE_OFFICE);
+  for (const r of dep) { const o = get(r[C.p]); o.dep += r[C.n]; if (r[C.m] <= MN - MATURE) { o.mN += r[C.n]; o.mX += r[C.x] * r[C.n]; } }
+  for (const r of vis) get(r[C.p]).vis += r[C.n];
+  for (const r of open) get(r[C.p]).open += r[C.n];
+  const offs = [...g.values()].filter(o => o.dep || o.vis || o.open).sort((x, y) => (x.id === none) - (y.id === none) || y.dep - x.dep || y.vis - x.vis);
+  finTable("#f-office", ["Partner office", "Deposits", "Visas", "Conversion", "Open"].concat(V ? ["Revenue"] : []),
+    offs.map(o => ({ id: o.id === none ? null : o.id, on: state.supplier.has(o.id), muted: o.id === none, cells: [officeLabel(D.offices[o.id]), fmt(o.dep), fmt(o.vis), pct(o.mN >= 10 && !teamOn() ? o.mX / o.mN : null), teamOn() ? "—" : fmt(o.open)].concat(V ? [rev(o.dep)] : []) })),
+    { limit: 25, key: "off", dim: "supplier", foot: ["Total", fmt(sum(dep)), fmt(sum(vis)), pct(conv(dep)), teamOn() ? "—" : fmt(openN)].concat(V ? [rev(dt)] : []) });
+
+  // deposit sources
+  const sg = new Map(); for (const r of dep) { const o = sg.get(r[C.s]) || sg.set(r[C.s], { id: r[C.s], n: 0, mN: 0, mX: 0 }).get(r[C.s]); o.n += r[C.n]; if (r[C.m] <= MN - MATURE) { o.mN += r[C.n]; o.mX += r[C.x] * r[C.n]; } }
+  finTable("#f-src", ["Source", "Deposits", "Share", "Conversion"].concat(V ? ["Revenue"] : []),
+    [...sg.values()].sort((x, y) => y.n - x.n).map(o => ({ id: o.id, on: state.source.has(o.id), cells: [D.segs[o.id], fmt(o.n), dt ? Math.round(100 * o.n / dt) + "%" : "—", pct(o.mN >= 10 && !teamOn() ? o.mX / o.mN : null)].concat(V ? [rev(o.n)] : []) })),
+    { dim: "source", empty: "No deposits in this view." });
+
+  // deposits 6+ months old with no visa, by brand
+  if (teamOn()) $("#f-risk").innerHTML = `<div class="hint" style="padding:10px 0">Not shown with a Team filter: a team is only known once there is a visa.</div>`;
+  else {
+    const rg = new Map(); for (const r of old) { const o = rg.get(r[C.b]) || rg.set(r[C.b], { id: r[C.b], old: 0, lost: 0 }).get(r[C.b]); o.old += r[C.n]; if (!r[C.x]) o.lost += r[C.n]; }
+    finTable("#f-risk", ["Brand", "Deposits 6+ months", "No visa", "Share"].concat(V ? ["At risk"] : []),
+      [...rg.values()].filter(o => o.lost).sort((x, y) => y.lost - x.lost).map(o => ({ id: o.id, on: state.brand.has(o.id), cells: [D.brands[o.id], fmt(o.old), fmt(o.lost), Math.round(100 * o.lost / o.old) + "%"].concat(V ? [rev(o.lost)] : []) })),
+      { limit: 25, key: "risk", dim: "brand", empty: old.length ? "Every deposit 6+ months old in this view has a visa." : "No deposit in the period is 6 months old yet.", foot: ["Total", fmt(sum(old)), fmt(lostN), sum(old) ? Math.round(100 * lostN / sum(old)) + "%" : "—"].concat(V ? [rev(lostN)] : []) });
+  }
+
+  // visas by university and intake: the four latest intakes in view, older ones together
+  const its = [...new Set(vis.map(r => r[C.t]))].sort((a, b) => a - b), last4 = its.slice(-4), earlier = its.length > 4;
+  const ug = new Map(); for (const r of vis) { const o = ug.get(r[C.i]) || ug.set(r[C.i], { id: r[C.i], t: new Map(), n: 0 }).get(r[C.i]); addTo(o.t, last4.includes(r[C.t]) ? r[C.t] : -1, r[C.n]); o.n += r[C.n]; }
+  const nr = D.insts.indexOf("Not recorded"), ol = D.insts.indexOf("Other / not listed"), tail = i => i === nr || i === ol;
+  const unis = [...ug.values()].sort((x, y) => tail(x.id) - tail(y.id) || y.n - x.n);
+  const colsT = (earlier ? [-1] : []).concat(last4), coltot = id => sum(vis.filter(r => (id === -1 ? !last4.includes(r[C.t]) : r[C.t] === id)));
+  finTable("#f-uni", ["University"].concat(colsT.map(t => t === -1 ? "Earlier" : D.intakes[t] + " intake"), ["Total"]),
+    unis.map(o => ({ id: tail(o.id) ? null : o.id, on: state.inst.has(o.id), muted: tail(o.id), cells: [D.insts[o.id]].concat(colsT.map(t => o.t.get(t) ? fmt(o.t.get(t)) : '<span class="muted">·</span>'), [fmt(o.n)]) })),
+    { limit: 30, key: "uni", dim: "inst", empty: "No visas in this view.", foot: ["Total"].concat(colsT.map(t => fmt(coltot(t))), [fmt(sum(vis))]) });
+}
+$("#f-val").oninput = e => { const x = parseFloat(e.target.value); state.fv = isFinite(x) && x > 0 ? x : null; finBlock(); };
+$("#f-cur").onchange = e => { state.cur = CURS.includes(e.target.value) ? e.target.value : "£"; finBlock(); };
+
 /* ---------------- render + tabs ---------------- */
 function renderTab(skip) {
   if (state.tab === "overview") { if (skip !== "timeline") timeline(); brandsChart(); mapChart(); treeChart(); lagChart(); heatChart(); srcBar(); supChart(); }
@@ -1597,13 +1861,13 @@ function renderAll(skip) {
   if (state.page === "ai") { renderAIPage(); return; }
   if (state.view === "home") return;
   periodUI(); filterUI(); chips();
-  if (state.view !== "home") { kpis(); if (state.view === "ceo") ceoBlock(); if (state.view === "product") prodBlock(); renderTab(skip); }
+  if (state.view !== "home") { kpis(); if (state.view === "ceo") ceoBlock(); if (state.view === "product") prodBlock(); if (state.view === "finance") finBlock(); renderTab(skip); }
 }
 function setView(v, quiet) {
   state.view = v === "home" || VIEW[v] ? v : "home";
-  const home = state.view === "home", ceo = state.view === "ceo", prod = state.view === "product", all = state.view === "all" || ceo || prod;
+  const home = state.view === "home", ceo = state.view === "ceo", prod = state.view === "product", fin = state.view === "finance", all = state.view === "all" || ceo || prod || fin;
   $("#views").hidden = !home; $("#vbody").hidden = home;
-  $("#v-all").hidden = !all; $("#v-other").hidden = home || all; $("#ceo").hidden = !ceo; $("#prod").hidden = !prod;
+  $("#v-all").hidden = !all; $("#v-other").hidden = home || all; $("#ceo").hidden = !ceo; $("#prod").hidden = !prod; $("#fin").hidden = !fin;
   $("#home").hidden = home;
   // the three insight cards sit under the KPI cards, except in the CEO View where they come after the "at a glance" block
   (ceo ? $("#ceo") : $(".kpis")).after($("#insights"));
@@ -1635,30 +1899,41 @@ $("#print").onclick = () => window.print();
 /* ---------------- export ---------------- */
 const xp = $("#xpanel"), xd = $("#x-dep"), xv = $("#x-vis");
 function closeExport() { xp.hidden = true; $("#export").setAttribute("aria-expanded", "false"); }
-$("#export").onclick = e => { e.stopPropagation(); const open = xp.hidden; xp.hidden = !open; $("#export").setAttribute("aria-expanded", open); };
+$("#export").onclick = e => { e.stopPropagation(); const open = xp.hidden; if (open) exportNote(); xp.hidden = !open; $("#export").setAttribute("aria-expanded", open); };
 xp.onclick = e => e.stopPropagation();
 document.addEventListener("click", closeExport);
 addEventListener("keydown", e => { if (e.key === "Escape") closeExport(); });
 [xd, xv].forEach(c => c.onchange = () => { $("#x-go").disabled = !xd.checked && !xv.checked; });
+// The file holds exactly what the page shows: every filter applies to deposits and visas alike (see DIMS for Team and Deposit source).
+function exportNote() {
+  const n = [];
+  if (state.team.size) n.push("Team: deposits are the ones that became a visa with the chosen team.");
+  if (state.source.size) n.push("Deposit source: visas are the ones whose deposit came from the chosen source.");
+  $("#x-note").textContent = n.join(" "); $("#x-note").hidden = !n.length;
+}
 $("#x-go").onclick = () => {
   const kinds = [xd.checked && 0, xv.checked && 1].filter(k => k !== false);
   if (!kinds.length) return;
   const agg = new Map();
   for (const kind of kinds) for (const r of sel(kind)) {
-    const k = [r[C.m], r[C.b], r[C.c], r[C.i], r[C.d], r[C.t], r[C.p]].join(), a = agg.get(k) || [0, 0, 0];
+    const team = kind ? r[C.s] : r[C.v], src = kind ? r[C.v] : r[C.s];
+    const k = [r[C.m], r[C.b], r[C.c], r[C.i], r[C.d], r[C.t], r[C.p], team, src].join(), a = agg.get(k) || [0, 0, 0];
     a[kind ? 2 : 0] += r[C.n]; if (!kind) a[1] += r[C.x] * r[C.n]; agg.set(k, a);
   }
   const q = s => '"' + String(s).replace(/"/g, '""') + '"';
   const wantD = kinds.includes(0), wantV = kinds.includes(1);
-  const lines = ["Month,Brand,City,Region,University,Destination,Intake,Partner office" + (wantD ? ",Deposits,Deposits that became a visa" : "") + (wantV ? ",Visas" : "")];
-  for (const [k, a] of agg) {
-    const [m, b, c, i, d, t, p] = k.split(",").map(Number);
-    lines.push([mStr(m), q(D.brands[b]), q(D.cities[c]), q(S.REGIONS[D.cityRegion[c]]), q(D.insts[i]), q(D.dests[d]), q(D.intakes[t]), q(D.offices[p])]
-      .concat(wantD ? [a[0], a[1]] : [], wantV ? [a[2]] : []).join(","));
+  const val = wantD && state.fv ? state.fv : null; // with a value per deposit (Finance view), deposits also get their value
+  const lines = ["Month,Brand,City,Region,University,Destination,Intake,Partner office,Team,Deposit source" + (wantD ? ",Deposits,Deposits that became a visa" : "") + (val ? `,Deposit value (${state.cur})` : "") + (wantV ? ",Visas" : "")];
+  const keys = [...agg.keys()].sort((x, y) => { const a = x.split(",").map(Number), b = y.split(",").map(Number); for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) return a[i] - b[i]; return 0; });
+  for (const k of keys) {
+    const a = agg.get(k), [m, b, c, i, d, t, p, tm, sr] = k.split(",").map(Number);
+    lines.push([mStr(m), q(D.brands[b]), q(D.cities[c]), q(S.REGIONS[D.cityRegion[c]]), q(D.insts[i]), q(D.dests[d]), q(D.intakes[t]), q(D.offices[p]), q(D.segs[tm]), q(D.segs[sr])]
+      .concat(wantD ? [a[0], a[1]] : [], val ? [Math.round(a[0] * val * 100) / 100] : [], wantV ? [a[2]] : []).join(","));
   }
   const a = document.createElement("a");
-  a.href = URL.createObjectURL(new Blob([lines.join("\n")], { type: "text/csv" }));
-  a.download = `scorp-outcomes-${wantD && wantV ? "" : wantD ? "deposits-" : "visas-"}${mStr(state.r[0])}-to-${mStr(state.r[1])}.csv`; a.click();
+  // the byte-order mark makes Excel read the file as UTF-8 (currency signs, accented names)
+  a.href = URL.createObjectURL(new Blob(["\ufeff" + lines.join("\n")], { type: "text/csv;charset=utf-8" }));
+  a.download = `scorp-outcomes-${wantD && wantV ? "" : wantD ? "deposits-" : "visas-"}${mStr(Math.max(state.r[0], D.firstM))}-to-${mStr(state.r[1])}.csv`; a.click();
   setTimeout(() => URL.revokeObjectURL(a.href), 1000);
   closeExport();
 };
@@ -1668,7 +1943,7 @@ const b64e = s => btoa(String.fromCharCode(...new TextEncoder().encode(s))).repl
 const b64d = s => new TextDecoder().decode(Uint8Array.from(atob(s.replace(/-/g, "+").replace(/_/g, "/")), c => c.charCodeAt(0)));
 function saveView() {
   const f = {}; DIMS.forEach(d => { if (state[d.key].size) f[d.key] = [...state[d.key]].map(i => d.list()[i]); });
-  return { f, r: full() ? null : [mStr(state.r[0]), mStr(state.r[1])], view: state.view, ck: state.kind, tab: state.tab, lg: state.lg.dim };
+  return { f, r: full() ? null : [mStr(state.r[0]), mStr(state.r[1])], view: state.view, ck: state.kind, tab: state.tab, lg: state.lg.dim, fv: state.fv, cur: state.cur };
 }
 function applyView(v) {
   DIMS.forEach(d => { state[d.key] = new Set(); (v.f && v.f[d.key] || []).forEach(n => { const i = d.list().indexOf(n); if (i >= 0) state[d.key].add(i); }); });
@@ -1676,6 +1951,7 @@ function applyView(v) {
   if (v.lg && DIM[v.lg]) state.lg.dim = v.lg;
   if (v.tab) state.tab = v.tab;
   state.view = v.view === "home" ? "home" : VIEW[v.view] ? v.view : "ceo"; state.kind = v.ck === 1 ? 1 : 0;
+  state.fv = typeof v.fv === "number" && v.fv > 0 ? v.fv : null; state.cur = CURS.includes(v.cur) ? v.cur : "£";
 }
 $("#share").onclick = async () => {
   const url = location.origin + location.pathname + "#sheet=" + sheetId + (aiSheet ? "&ai=" + aiSheet : "") + "&v=" + b64e(JSON.stringify(saveView()));
@@ -1808,7 +2084,8 @@ async function load(id, view) {
   if (view) applyView(view);
   const asOf = new Date(D.asOf + "T00:00:00");
   $("#asof").textContent = "Live · loaded " + new Date().toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }) + " · data to " + asOf.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
-  $("#foot").textContent = `${fmt(D.totals.visa)} visa and ${fmt(D.totals.deposit)} deposit records`;
+  const dbl = D.dq.doubles.visa + D.dq.doubles.deposit;
+  $("#foot").textContent = `${fmt(D.totals.visa)} visa and ${fmt(D.totals.deposit)} deposit records` + (dbl ? ` (${fmt(dbl)} forms sent twice counted once)` : "");
   $("#gate").hidden = true; $("#dash").hidden = false;
   buildFilterBar(); buildViews(); setView(state.view, true); renderAll();
   reportP = null; // the AI report is fetched when the AI analysis page opens
